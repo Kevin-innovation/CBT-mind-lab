@@ -559,7 +559,9 @@
   }
 
   .story-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 18px;
   }
 
   .goals-grid {
@@ -662,6 +664,25 @@
 
   .story-text p + p {
     margin-top: 12px;
+  }
+
+  .story-wide {
+    padding: 26px 28px;
+  }
+
+  .story-columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .story-columns p {
+    font-size: 15px;
+    line-height: 1.82;
+  }
+
+  .story-questions .bullet-list {
+    gap: 14px;
   }
 
   .goal-card,
@@ -2001,6 +2022,11 @@
 
     .hero-title {
       white-space: normal;
+    }
+
+    .story-columns {
+      grid-template-columns: 1fr;
+      gap: 12px;
     }
 
     .side-stack {
