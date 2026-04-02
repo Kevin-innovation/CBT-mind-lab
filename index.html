@@ -2743,6 +2743,7 @@
     localStorage.setItem(REPORT_CACHE_KEY, JSON.stringify(weeklyReportCache));
   }
 
+  // 앱 시작 시 localStorage에 남아 있는 기록, 설정, 리포트를 한 번에 복원한다.
   function loadStorage() {
     try {
       var rawRecords = JSON.parse(localStorage.getItem(STORE_KEY) || "[]");
@@ -2907,6 +2908,7 @@
     };
   }
 
+  // 이전 버전 데이터와 현재 버전 데이터를 같은 분석 구조로 맞춘다.
   function normalizeLegacyAnalysis(raw) {
     if (!Array.isArray(raw) || !raw.length) return null;
 
@@ -2964,6 +2966,7 @@
     return record;
   }
 
+  // 로컬 분석은 생각 문장의 키워드를 바탕으로 왜곡 후보를 빠르게 추정한다.
   function rankDistortions(thought) {
     var text = String(thought || "");
     var ranked = [];
@@ -3000,6 +3003,7 @@
     return ranked.slice(0, 3).map(normalizeDistortionItem);
   }
 
+  // Gemini가 없거나 실패해도 결과를 끊지 않기 위한 로컬 규칙 기반 안전망이다.
   function getRuleBasedAnalysis(record, fallbackReason) {
     var distortions = rankDistortions(record.thought);
     var primary = distortions[0];
@@ -3056,6 +3060,7 @@
     return text.trim();
   }
 
+  // Gemini 응답을 JSON으로 고정해 이후 카드, 차트, 리포트에서 안정적으로 재사용한다.
   async function callGeminiJson(options) {
     if (!hasApiKey()) throw new Error("Gemini API 키가 없습니다.");
 
@@ -3103,6 +3108,7 @@
     }
   }
 
+  // 프롬프트는 발표 자료의 핵심 구조인 상황-생각-감정-행동 순서를 그대로 따른다.
   function buildAnalysisPrompt(record) {
     return [
       "다음 학생 기록을 CBT 관점에서 분석하세요.",
@@ -3133,6 +3139,7 @@
     ].join(" ");
   }
 
+  // 실제 분석 진입점: AI 우선, 실패 시 로컬 분석으로 폴백한다.
   async function analyzeRecord(record) {
     var fallback = getRuleBasedAnalysis(record, "");
     if (!hasApiKey()) {
@@ -3169,6 +3176,7 @@
     }
   }
 
+  // 최근 7일 기록으로 감정 강도, 주요 감정, 주요 왜곡, 추세를 계산한다.
   function buildWeeklyStats() {
     var now = new Date();
     var weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -3246,6 +3254,7 @@
     return entries[0] || null;
   }
 
+  // AI 리포트가 없을 때도 발표 가능한 수준의 요약을 만들도록 로컬 리포트를 유지한다.
   function buildLocalWeeklyReport(stats, reason) {
     if (!stats.total) {
       return {
@@ -3323,6 +3332,7 @@
     ].join("\n");
   }
 
+  // 주간 리포트도 기록 분석과 같은 이중 경로를 가진다: Gemini 또는 로컬 요약.
   async function generateAiWeeklyReport(stats) {
     var fallback = buildLocalWeeklyReport(stats, "");
     if (!hasApiKey()) {
@@ -3407,6 +3417,7 @@
     }
   }
 
+  // 4단계 폼은 CBT 기록 순서를 그대로 UI 단계로 나눈 구조다.
   function updateFormUi() {
     for (var i = 0; i < 4; i++) {
       $("step-" + i).classList.toggle("active", i === formStep);
@@ -3479,6 +3490,7 @@
     saveReportCache();
   }
 
+  // 폼 입력의 핵심 저장 흐름: 검증 → 분석 → 저장 → 대시보드/리포트 갱신.
   async function submitFormRecord() {
     if (!validateCurrentStep()) {
       var errors = [
@@ -3749,6 +3761,7 @@
     document.body.style.overflow = "";
   }
 
+  // records 배열 하나를 기준으로 모든 시각화와 기록 목록을 다시 그린다.
   function refreshDashboard() {
     updateBackupStatus();
     if (!records.length) {
@@ -3765,6 +3778,7 @@
     drawRecordList();
   }
 
+  // 선 그래프는 날짜에 따른 감정 강도 변화를 보여준다.
   function drawLineChart() {
     var ctx = $("line-chart").getContext("2d");
     if (lineChart) lineChart.destroy();
@@ -3812,6 +3826,7 @@
     });
   }
 
+  // 도넛 차트는 가장 자주 반복되는 왜곡 패턴이 무엇인지 보여준다.
   function drawDonutChart() {
     var ctx = $("donut-chart").getContext("2d");
     if (donutChart) donutChart.destroy();
@@ -3858,6 +3873,7 @@
     });
   }
 
+  // 히트맵은 언제 불안이 높아지는지 시간대와 요일 관점에서 읽게 한다.
   function drawHeatmap() {
     var dayLabels = ["월", "화", "수", "목", "금", "토", "일"];
     var timeLabels = ["오전", "오후", "저녁", "밤"];
@@ -3946,6 +3962,7 @@
     $("record-list").innerHTML = html;
   }
 
+  // 주간 리포트는 최근 7일 통계를 로컬 또는 AI 리포트로 변환해 렌더링한다.
   function renderReport(mode) {
     currentReportMode = mode || "local";
     var stats = buildWeeklyStats();
@@ -4047,6 +4064,7 @@
     $("model-name").value = settings.model || DEFAULT_MODEL;
   }
 
+  // 실제 분석 전에 API 키와 모델 응답을 확인하는 연결 검증 단계다.
   async function testGeminiConnection() {
     if (!String($("api-key").value).trim()) {
       toast("먼저 Gemini API 키를 입력해주세요.", "warn");
@@ -4175,6 +4193,7 @@
     for (var i = 0; i < targets.length; i++) observer.observe(targets[i]);
   }
 
+  // 화면의 모든 버튼과 입력창을 실제 기능 함수에 연결하는 허브다.
   function bindEvents() {
     $("emotion-grid").addEventListener("click", function(event) {
       var button = event.target.closest(".emotion-chip");
@@ -4351,6 +4370,7 @@
     window.addEventListener("scroll", updateNav, { passive: true });
   }
 
+  // 앱 부팅 순서: 저장소 복원 → 기본 UI 렌더링 → 이벤트 연결.
   function init() {
     loadStorage();
     renderDistortionCards();
