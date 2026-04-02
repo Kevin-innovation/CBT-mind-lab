@@ -711,7 +711,33 @@
   }
 
   .story-questions .bullet-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px;
+  }
+
+  .story-questions .bullet-item {
+    min-height: 100%;
+    padding: 18px 16px;
+    border-radius: 18px;
+    border: 1px solid rgba(222, 213, 198, 0.88);
+    background: rgba(255, 255, 255, 0.74);
+  }
+
+  .story-questions .bullet-item > div {
+    display: grid;
+    gap: 6px;
+  }
+
+  .story-questions .bullet-item strong {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--ink);
+  }
+
+  .story-questions .bullet-mark {
+    margin-top: 2px;
   }
 
   .goal-card,
@@ -2058,6 +2084,10 @@
       gap: 14px;
     }
 
+    .story-questions .bullet-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .story-block {
       padding: 0;
     }
@@ -2099,6 +2129,10 @@
     .feature-grid,
     .chart-grid,
     .report-insight-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .story-questions .bullet-list {
       grid-template-columns: 1fr;
     }
 
