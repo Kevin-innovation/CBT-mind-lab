@@ -9,7 +9,7 @@
 
   var DIST = {
     "흑백논리": {
-      icon: "fa-circle-half-stroke",
+      icon: "circle-slash-2",
       color: "#2f6f58",
       kw: ["전부", "아무것도", "완벽", "망했다", "0점", "무조건", "절대", "전혀", "다 틀렸", "하나도", "완전히"],
       desc: "중간 단계를 인정하지 않고 완벽하거나 완전히 실패한 것으로만 평가하는 패턴입니다.",
@@ -18,7 +18,7 @@
       alt: ["완벽하지 않아도 일부는 충분히 해낼 수 있다.", "한 번의 결과가 내 전체 능력을 증명하지는 않는다.", "성공과 실패 사이에는 다양한 단계가 있다."]
     },
     "파국화": {
-      icon: "fa-volcano",
+      icon: "triangle-alert",
       color: "#c7854b",
       kw: ["끝장", "죽겠다", "망할", "대재앙", "치명적", "최악", "절망", "파탄", "끝이다"],
       desc: "부정적 사건이 곧 큰 재앙으로 이어질 것처럼 확대 해석하는 패턴입니다.",
@@ -27,7 +27,7 @@
       alt: ["불편한 일일 수 있지만 재앙이라고 단정할 필요는 없다.", "최악의 가능성보다 현실적인 가능성을 먼저 볼 수 있다.", "결과가 기대보다 나빠도 완전히 무너지지는 않는다."]
     },
     "과잉일반화": {
-      icon: "fa-arrows-left-right-to-line",
+      icon: "waypoints",
       color: "#5a7c9c",
       kw: ["항상", "늘", "매번", "언제나", "결국", "역시", "번번이", "계속", "한 번도"],
       desc: "한 번의 사건이나 일부 경험을 근거로 전체를 일반화하는 패턴입니다.",
@@ -36,7 +36,7 @@
       alt: ["이번에는 어려웠지만 항상 그런 것은 아니다.", "과거에 잘한 순간도 있었으니 전체를 일반화할 필요는 없다.", "한 번의 결과가 다음 결과를 모두 결정하지 않는다."]
     },
     "마음읽기": {
-      icon: "fa-eye",
+      icon: "scan-eye",
       color: "#8b6db2",
       kw: ["나보고", "내가 싫어", "웃음거리", "비웃", "판단할", "평가할", "사람들이", "속으로"],
       desc: "타인이 자신을 부정적으로 보고 있다고 확신하는 패턴입니다.",
@@ -45,7 +45,7 @@
       alt: ["상대의 생각을 나는 완전히 알 수 없다.", "타인은 내가 생각하는 것만큼 나를 오래 보지 않을 수 있다.", "부정적으로 보였더라도 그 이유가 꼭 나 때문은 아닐 수 있다."]
     },
     "감정적 추론": {
-      icon: "fa-heart-crack",
+      icon: "heart-pulse",
       color: "#c45b6a",
       kw: ["느끼기 때문에", "느끼니까", "직감", "느낌이", "분명", "틀림없어"],
       desc: "느낌을 사실의 증거처럼 받아들이는 패턴입니다.",
@@ -54,7 +54,7 @@
       alt: ["불안하다고 해서 실제로 위험한 것은 아니다.", "감정은 중요한 정보지만 사실 그 자체는 아니다.", "기분과 현실을 분리해서 볼 수 있다."]
     },
     "해야식 사고": {
-      icon: "fa-gavel",
+      icon: "badge-alert",
       color: "#b5922d",
       kw: ["해야", "해야만", "반드시", "의무", "당연히", "꼭", "기필코", "안 하면 안 돼"],
       desc: "자신이나 타인에게 매우 엄격한 규칙을 적용하는 패턴입니다.",
@@ -63,7 +63,7 @@
       alt: ["하고 싶지만 못했다고 해서 내 가치가 사라지지는 않는다.", "원하는 목표와 절대 규칙은 다를 수 있다.", "조금 덜 해내도 충분히 의미가 있다."]
     },
     "개인화": {
-      icon: "fa-hand-point-back",
+      icon: "user-round-search",
       color: "#4d8b7f",
       kw: ["내 탓", "내 잘못", "내가 때문에", "내가 못 해서", "나만", "내 책임"],
       desc: "여러 요인이 있는 상황에서도 지나치게 자신의 책임으로 돌리는 패턴입니다.",
@@ -71,6 +71,17 @@
       q: ["다른 요인도 있었나요?", "내가 통제할 수 없는 부분은 없었나요?", "친구가 같은 상황이면 그 친구에게도 전부 네 탓이라고 말할까요?"],
       alt: ["그 결과에는 여러 요인이 함께 작용했다.", "내 책임이 일부 있을 수는 있어도 전부는 아니다.", "자책보다 다음 행동을 바꾸는 것이 더 도움이 된다."]
     }
+  };
+
+  var DIST_ICON_PATHS = {
+    "circle-slash-2": "<circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M22 2 2 22\"></path>",
+    "triangle-alert": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"></path><path d=\"M12 9v4\"></path><path d=\"M12 17h.01\"></path>",
+    "waypoints": "<path d=\"m10.586 5.414-5.172 5.172\"></path><path d=\"m18.586 13.414-5.172 5.172\"></path><path d=\"M6 12h12\"></path><circle cx=\"12\" cy=\"20\" r=\"2\"></circle><circle cx=\"12\" cy=\"4\" r=\"2\"></circle><circle cx=\"20\" cy=\"12\" r=\"2\"></circle><circle cx=\"4\" cy=\"12\" r=\"2\"></circle>",
+    "scan-eye": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\"></path><path d=\"M17 3h2a2 2 0 0 1 2 2v2\"></path><path d=\"M21 17v2a2 2 0 0 1-2 2h-2\"></path><path d=\"M7 21H5a2 2 0 0 1-2-2v-2\"></path><circle cx=\"12\" cy=\"12\" r=\"1\"></circle><path d=\"M18.944 12.33a1 1 0 0 0 0-.66 7.5 7.5 0 0 0-13.888 0 1 1 0 0 0 0 .66 7.5 7.5 0 0 0 13.888 0\"></path>",
+    "heart-pulse": "<path d=\"M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5\"></path><path d=\"M3.22 13H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27\"></path>",
+    "badge-alert": "<path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\"></path><line x1=\"12\" x2=\"12\" y1=\"8\" y2=\"12\"></line><line x1=\"12\" x2=\"12.01\" y1=\"16\" y2=\"16\"></line>",
+    "user-round-search": "<circle cx=\"10\" cy=\"8\" r=\"5\"></circle><path d=\"M2 21a8 8 0 0 1 10.434-7.62\"></path><circle cx=\"18\" cy=\"18\" r=\"3\"></circle><path d=\"m22 22-1.9-1.9\"></path>",
+    "search": "<path d=\"m21 21-4.34-4.34\"></path><circle cx=\"11\" cy=\"11\" r=\"8\"></circle>"
   };
 
   var DIST_NAMES = Object.keys(DIST);
@@ -208,6 +219,12 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#39;");
+  }
+
+  function renderDistortionIcon(iconName, className) {
+    var paths = DIST_ICON_PATHS[iconName] || DIST_ICON_PATHS.search;
+    var classes = "lucide-icon" + (className ? " " + className : "");
+    return "<svg class=\"" + classes + "\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\">" + paths + "</svg>";
   }
 
   function clamp(num, min, max) {
@@ -490,7 +507,7 @@
   function getDistMeta(name) {
     if (DIST[name]) return DIST[name];
     return {
-      icon: "fa-magnifying-glass",
+      icon: "search",
       color: "#6f766f",
       desc: "입력된 생각에서 뚜렷한 특정 왜곡이 강하게 드러나지 않았습니다."
     };
@@ -1018,7 +1035,7 @@
       var meta = DIST[name];
       html += "<article class=\"distortion-card\" style=\"--dist-color:" + meta.color + "; --dist-soft:" + meta.color + "16; --dist-line:" + meta.color + "40;\">";
       html += "<div class=\"distortion-card-head\">";
-      html += "<span><i class=\"fa-solid " + meta.icon + "\"></i></span>";
+      html += "<span>" + renderDistortionIcon(meta.icon, "distortion-icon-svg") + "</span>";
       html += "<strong>" + escapeHtml(name) + "</strong>";
       html += "</div>";
       html += "<p>" + escapeHtml(meta.cardDesc || meta.desc) + "</p>";
@@ -1342,7 +1359,7 @@
       distortionHtml += "<article class=\"analysis-card\">";
       distortionHtml += "<div class=\"analysis-card-head\">";
       distortionHtml += "<div class=\"analysis-card-head-left\">";
-      distortionHtml += "<span class=\"analysis-icon\" style=\"background:" + item.color + "18; color:" + item.color + ";\"><i class=\"fa-solid " + item.icon + "\"></i></span>";
+      distortionHtml += "<span class=\"analysis-icon\" style=\"background:" + item.color + "18; color:" + item.color + ";\">" + renderDistortionIcon(item.icon, "analysis-icon-svg") + "</span>";
       distortionHtml += "<div><strong style=\"margin-bottom: 4px;\">" + escapeHtml(item.name) + "</strong><div class=\"small-muted\">" + escapeHtml(item.reason) + "</div></div>";
       distortionHtml += "</div>";
       distortionHtml += "<span class=\"analysis-score\">가능성 " + item.confidence + "%</span>";
@@ -1630,7 +1647,7 @@
       html += "<div style=\"flex:1; min-width:0;\">";
       html += "<div class=\"record-badges\">";
       html += "<span class=\"badge gray\"><i class=\"fa-solid fa-clock\"></i> " + escapeHtml(formatDateTime(record.date)) + "</span>";
-      html += "<span class=\"badge gray\" style=\"background:" + primary.color + "18; color:" + primary.color + ";\"><i class=\"fa-solid " + primary.icon + "\"></i> " + escapeHtml(primary.name) + "</span>";
+      html += "<span class=\"badge gray\" style=\"background:" + primary.color + "18; color:" + primary.color + ";\">" + renderDistortionIcon(primary.icon, "badge-icon-svg") + " " + escapeHtml(primary.name) + "</span>";
       html += sourceBadge;
       html += "</div>";
       html += "<p class=\"record-title\">" + escapeHtml(record.situation) + "</p>";
