@@ -367,6 +367,13 @@
     border: 1px solid var(--line);
   }
 
+  .btn.accent {
+    color: #fff;
+    background: linear-gradient(135deg, #cf8e43 0%, #a95b2d 100%);
+    border: 1px solid rgba(139, 77, 36, 0.18);
+    box-shadow: 0 14px 32px rgba(169, 91, 45, 0.24);
+  }
+
   .micro-list {
     display: flex;
     flex-wrap: wrap;
@@ -574,6 +581,26 @@
     align-items: stretch;
   }
 
+  .setup-head {
+    max-width: none;
+    margin-bottom: 22px;
+  }
+
+  .setup-head .section-title {
+    white-space: nowrap;
+    text-wrap: nowrap;
+    font-size: clamp(30px, 3.8vw, 56px);
+  }
+
+  .setup-head .section-copy {
+    max-width: 900px;
+  }
+
+  .setup-single {
+    width: 100%;
+    max-width: 980px;
+  }
+
   .record-grid {
     grid-template-columns: 1fr;
     align-items: stretch;
@@ -581,7 +608,7 @@
   }
 
   .record-grid > .panel {
-    min-height: 720px;
+    min-height: 610px;
   }
 
   .chart-grid {
@@ -676,10 +703,33 @@
   }
 
   .distortion-card {
-    padding: 18px;
-    min-height: 134px;
+    padding: 20px 18px 18px;
+    min-height: 148px;
     display: flex;
     flex-direction: column;
+    border-color: var(--dist-line, rgba(222, 213, 198, 0.88));
+    background: linear-gradient(180deg, var(--dist-soft, rgba(255, 255, 255, 0.94)) 0%, rgba(255, 255, 255, 0.96) 76%);
+    box-shadow: 0 16px 28px rgba(24, 34, 29, 0.06);
+  }
+
+  .distortion-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 6px;
+    background: var(--dist-color, var(--green));
+  }
+
+  .distortion-card::after {
+    content: "";
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--dist-soft, rgba(255, 255, 255, 0.22)) 0%, transparent 72%);
+    pointer-events: none;
   }
 
   .goal-card,
@@ -765,24 +815,38 @@
   .distortion-card-head {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: 12px;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .distortion-card-head strong {
+    margin: 0;
+    font-size: 15px;
+    color: #1e2b26;
   }
 
   .distortion-card-head span {
     display: inline-flex;
-    width: 34px;
-    height: 34px;
+    width: 40px;
+    height: 40px;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
+    border-radius: 14px;
     font-size: 14px;
+    background: var(--dist-soft, rgba(255, 255, 255, 0.84));
+    color: var(--dist-color, var(--green));
+    box-shadow: inset 0 0 0 1px var(--dist-line, rgba(222, 213, 198, 0.88));
   }
 
   .distortion-card p {
-    color: var(--muted);
+    position: relative;
+    z-index: 1;
+    color: #34423c;
     font-size: 12px;
-    line-height: 1.5;
+    font-weight: 600;
+    line-height: 1.6;
   }
 
   .helper {
@@ -840,7 +904,13 @@
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.82);
     border: 1px solid rgba(222, 213, 198, 0.9);
-    margin-bottom: 18px;
+    margin-bottom: 16px;
+  }
+
+  .record-form-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 510px;
   }
 
   .tab-btn {
@@ -862,7 +932,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 14px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
 
   .progress {
@@ -870,7 +940,7 @@
     border-radius: 999px;
     background: rgba(222, 213, 198, 0.75);
     overflow: hidden;
-    margin-bottom: 18px;
+    margin-bottom: 14px;
   }
 
   .progress > span {
@@ -911,7 +981,11 @@
   }
 
   .step-panel p {
-    margin-bottom: 14px;
+    margin-bottom: 12px;
+  }
+
+  .record-form-shell textarea {
+    min-height: 118px;
   }
 
   .emotion-grid {
@@ -1005,11 +1079,17 @@
   .chat-shell {
     display: flex;
     flex-direction: column;
-    min-height: 570px;
+    min-height: 500px;
     border-radius: 24px;
     border: 1px solid rgba(222, 213, 198, 0.88);
     background: rgba(255, 255, 255, 0.84);
     overflow: hidden;
+  }
+
+  .record-actions {
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 16px;
   }
 
   .chat-head {
@@ -1263,35 +1343,179 @@
     overflow-x: auto;
   }
 
-  .heat-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 8px;
+  .heatmap-shell {
+    min-width: 640px;
+    display: grid;
+    gap: 14px;
   }
 
-  .heat-table th {
+  .heatmap-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  .heatmap-summary {
+    display: grid;
+    gap: 4px;
+    padding: 16px 18px;
+    min-width: 228px;
+    border-radius: 18px;
+    border: 1px solid rgba(222, 213, 198, 0.88);
+    background:
+      radial-gradient(circle at top right, rgba(220, 237, 223, 0.95), transparent 42%),
+      rgba(255, 255, 255, 0.9);
+  }
+
+  .heatmap-summary-label {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .heatmap-summary strong {
+    font-size: 21px;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+  }
+
+  .heatmap-summary p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .heatmap-legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .heatmap-legend-title {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .heatmap-legend-scale {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(222, 213, 198, 0.88);
+    background: rgba(255, 255, 255, 0.86);
+  }
+
+  .heatmap-legend-scale span {
     color: var(--muted);
     font-size: 11px;
     font-weight: 700;
-    text-align: center;
   }
 
-  .heat-table td:first-child {
+  .heatmap-legend-bar {
+    width: 120px;
+    height: 10px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(126, 178, 149, 0.35) 0%, rgba(209, 163, 75, 0.7) 55%, rgba(184, 93, 76, 0.92) 100%);
+  }
+
+  .heatmap-grid {
+    display: grid;
+    grid-template-columns: 72px repeat(4, minmax(96px, 1fr));
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .heatmap-axis,
+  .heatmap-row-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    border-radius: 16px;
+    border: 1px solid rgba(222, 213, 198, 0.72);
+    background: rgba(255, 255, 255, 0.72);
     color: var(--green-deep);
     font-size: 12px;
     font-weight: 800;
-    white-space: nowrap;
   }
 
-  .heat-cell {
-    min-width: 68px;
-    min-height: 42px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 14px;
-    font-size: 12px;
+  .heatmap-axis {
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+
+  .heatmap-corner {
+    background: transparent;
+    border-style: dashed;
+    color: var(--muted);
+  }
+
+  .heatmap-cell {
+    position: relative;
+    min-height: 80px;
+    padding: 12px 12px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  }
+
+  .heatmap-cell.is-empty {
+    border: 1px dashed rgba(200, 190, 169, 0.9);
+  }
+
+  .heatmap-cell.is-peak {
+    outline: 2px solid rgba(23, 58, 45, 0.88);
+    outline-offset: 1px;
+    box-shadow: 0 16px 24px rgba(24, 34, 29, 0.12);
+  }
+
+  .heatmap-peak-flag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 3px 7px;
+    border-radius: 999px;
+    font-size: 10px;
     font-weight: 800;
+    letter-spacing: 0.06em;
+    color: #fff;
+    background: rgba(23, 58, 45, 0.92);
+  }
+
+  .heatmap-value {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    line-height: 1;
+  }
+
+  .heatmap-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    color: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    opacity: 0.9;
+  }
+
+  .heatmap-meta span:last-child {
+    opacity: 0.72;
   }
 
   .record-list {
@@ -1769,6 +1993,11 @@
       white-space: normal;
     }
 
+    .setup-head .section-title {
+      white-space: normal;
+      text-wrap: balance;
+    }
+
     .side-stack {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -1804,6 +2033,11 @@
     }
 
     .record-grid > .panel {
+      min-height: auto;
+    }
+
+    .record-form-shell,
+    .chat-shell {
       min-height: auto;
     }
 

@@ -258,41 +258,16 @@
   </section>
 
   <section id="setup" class="section alt">
-    <div class="container setup-grid">
-      <div class="reveal">
+    <div class="container">
+      <div class="section-head reveal setup-head">
         <span class="eyebrow badge-green"><i class="fa-solid fa-key"></i> Gemini API Setup</span>
         <h2 class="section-title">Gemini 연결 시 실제 모델 분석으로 전환됩니다</h2>
         <p class="section-copy">
           브라우저에서 Gemini REST API를 직접 호출합니다. 키가 없거나 호출에 실패하면 로컬 분석으로 자동 전환됩니다.
         </p>
-        <div class="card" style="margin-top: 18px;">
-          <div class="bullet-list">
-            <div class="bullet-item">
-              <span class="bullet-mark"><i class="fa-solid fa-lock"></i></span>
-              <div>
-                <strong>보안 주의</strong>
-                <p class="small-muted">키는 localStorage에 저장되므로 개인 테스트용 구성이며, 운영 시에는 서버 프록시가 필요합니다.</p>
-              </div>
-            </div>
-            <div class="bullet-item">
-              <span class="bullet-mark"><i class="fa-solid fa-globe"></i></span>
-              <div>
-                <strong>실행 방식</strong>
-                <p class="small-muted">`file://` 대신 로컬 서버에서 열면 API 호출 오류를 줄일 수 있습니다.</p>
-              </div>
-            </div>
-            <div class="bullet-item">
-              <span class="bullet-mark"><i class="fa-solid fa-repeat"></i></span>
-              <div>
-                <strong>폴백 로직</strong>
-                <p class="small-muted">Gemini 실패 시에도 기록, 그래프, 리포트는 로컬 엔진으로 계속 동작합니다.</p>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
 
-      <div class="setup-panel reveal">
+      <div class="setup-panel setup-single reveal">
         <div class="setup-status-row">
           <div>
             <strong style="margin-bottom: 6px;">연결 설정</strong>
@@ -345,7 +320,7 @@
             <button class="tab-btn" data-tab="chat"><i class="fa-solid fa-comments"></i> 대화로 기록</button>
           </div>
 
-          <div id="form-panel">
+          <div id="form-panel" class="record-form-shell">
             <div class="wizard-top">
               <div>
                 <strong id="step-label" style="display: block; margin-bottom: 4px; font-size: 15px;">1 / 4 · 상황 입력</strong>
@@ -395,7 +370,7 @@
 
             <div id="record-status" class="status-line"></div>
 
-            <div class="wizard-actions" style="justify-content: space-between; margin-top: 18px;">
+            <div class="wizard-actions record-actions">
               <button id="prev-step" class="btn ghost" style="display: none;"><i class="fa-solid fa-arrow-left"></i> 이전</button>
               <span style="flex: 1;"></span>
               <button id="next-step" class="btn primary">다음 <i class="fa-solid fa-arrow-right"></i></button>
@@ -426,7 +401,7 @@
             <p class="small-muted">GitHub Pages에서도 브라우저마다 저장이 분리됩니다. 백업 파일을 내보내 다른 기기에서 불러오면 기록을 이어서 쓸 수 있습니다.</p>
             <div id="backup-status" class="analysis-note" style="margin-top: 0;">저장된 기록 0건 · 백업 파일에는 API 키가 포함되지 않습니다.</div>
             <div class="sync-actions">
-              <button id="import-demo-records" class="btn ghost"><i class="fa-solid fa-flask"></i> 28개 더미 불러오기</button>
+              <button id="import-demo-records" class="btn accent"><i class="fa-solid fa-flask"></i> 테스트 데이터 불러오기</button>
               <button id="export-records" class="btn secondary"><i class="fa-solid fa-file-export"></i> 기록 내보내기</button>
               <button id="import-records" class="btn ghost"><i class="fa-solid fa-file-import"></i> 기록 불러오기</button>
             </div>
@@ -519,11 +494,11 @@
         <div class="empty-mark"><i class="fa-solid fa-chart-column"></i></div>
         <h3 style="margin-bottom: 10px;">아직 저장된 기록이 없습니다</h3>
         <p class="helper" style="max-width: 500px; margin: 0 auto 18px;">
-          기록을 시작하면 감정 변화 그래프와 왜곡 빈도 차트가 생성됩니다. 빠르게 확인하고 싶다면 데모 데이터를 불러와도 됩니다.
+          기록을 시작하면 감정 변화 그래프와 왜곡 빈도 차트가 생성됩니다. 빠르게 확인하고 싶다면 테스트 데이터를 먼저 불러와도 됩니다.
         </p>
         <div class="setup-actions" style="justify-content: center;">
           <a href="#record" class="btn primary"><i class="fa-solid fa-pen"></i> 기록하러 가기</a>
-          <button id="load-demo" class="btn secondary"><i class="fa-solid fa-flask"></i> 데모 데이터 불러오기</button>
+          <button id="load-demo" class="btn secondary"><i class="fa-solid fa-flask"></i> 테스트 데이터 불러오기</button>
         </div>
       </div>
 

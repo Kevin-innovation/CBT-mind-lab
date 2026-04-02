@@ -380,7 +380,7 @@
           behavior: payload.behavior,
           analysis: null
         };
-        record.analysis = getRuleBasedAnalysis(record, "테스트용 더미 데이터는 로컬 분석으로 생성되었습니다.");
+        record.analysis = getRuleBasedAnalysis(record, "테스트 데이터는 로컬 분석으로 생성되었습니다.");
         built.push(record);
       }
     }
@@ -433,8 +433,8 @@
 
   function importDemoRecords() {
     importBackupPayload(buildDemoBackupPayload(), {
-      statusMessage: "28건 더미 기록을 불러왔습니다",
-      toastMessage: "7일 x 4시간대 더미 기록 28건을 불러왔습니다."
+      statusMessage: "테스트 데이터 28건을 불러왔습니다",
+      toastMessage: "7일 x 4시간대 테스트 데이터 28건을 불러왔습니다."
     });
   }
 
@@ -1016,10 +1016,10 @@
     for (var i = 0; i < DIST_NAMES.length; i++) {
       var name = DIST_NAMES[i];
       var meta = DIST[name];
-      html += "<article class=\"distortion-card\">";
+      html += "<article class=\"distortion-card\" style=\"--dist-color:" + meta.color + "; --dist-soft:" + meta.color + "16; --dist-line:" + meta.color + "40;\">";
       html += "<div class=\"distortion-card-head\">";
-      html += "<span style=\"background:" + meta.color + "18; color:" + meta.color + ";\"><i class=\"fa-solid " + meta.icon + "\"></i></span>";
-      html += "<strong style=\"margin:0; font-size:15px;\">" + escapeHtml(name) + "</strong>";
+      html += "<span><i class=\"fa-solid " + meta.icon + "\"></i></span>";
+      html += "<strong>" + escapeHtml(name) + "</strong>";
       html += "</div>";
       html += "<p>" + escapeHtml(meta.cardDesc || meta.desc) + "</p>";
       html += "</article>";
@@ -1504,9 +1504,12 @@
     var dayLabels = ["월", "화", "수", "목", "금", "토", "일"];
     var timeLabels = ["오전", "오후", "저녁", "밤"];
     var grid = {};
+    var cells = [];
+    var peak = null;
     var i;
 
     for (i = 0; i < 7; i++) {
+      cells[i] = [];
       for (var j = 0; j < 4; j++) {
         grid[i + "-" + j] = [];
       }
@@ -1523,7 +1526,10 @@
 
     function tone(values) {
       if (!values.length) {
-        return "background: rgba(244, 239, 231, 0.9); color: #9a9588;";
+        return {
+          avg: 0,
+          style: "background: rgba(244, 239, 231, 0.9); color: #9a9588;"
+        };
       }
       var sum = 0;
       for (var k = 0; k < values.length; k++) sum += values[k];
@@ -1532,26 +1538,79 @@
       var red = Math.round(126 + ratio * 72);
       var green = Math.round(178 - ratio * 72);
       var blue = Math.round(149 - ratio * 54);
-      return "background: rgba(" + red + "," + green + "," + blue + "," + (0.22 + ratio * 0.55) + "); color:" + (ratio > 0.45 ? "#fff" : "#173a2d") + ";";
+      return {
+        avg: avg,
+        style: "background: rgba(" + red + "," + green + "," + blue + "," + (0.22 + ratio * 0.55) + "); color:" + (ratio > 0.45 ? "#fff" : "#173a2d") + ";"
+      };
     }
 
-    var html = "<table class=\"heat-table\"><thead><tr><th></th>";
-    for (i = 0; i < timeLabels.length; i++) {
-      html += "<th>" + timeLabels[i] + "</th>";
+    function intensityLabel(avg) {
+      if (avg >= 7.5) return "높음";
+      if (avg >= 5.5) return "주의";
+      if (avg >= 3.5) return "보통";
+      return "낮음";
     }
-    html += "</tr></thead><tbody>";
 
     for (i = 0; i < dayLabels.length; i++) {
-      html += "<tr><td>" + dayLabels[i] + "</td>";
       for (var t = 0; t < timeLabels.length; t++) {
         var values = grid[i + "-" + t];
-        var avgValue = values.length ? (values.reduce(function(a, b) { return a + b; }, 0) / values.length).toFixed(1) : "-";
-        html += "<td><div class=\"heat-cell\" style=\"" + tone(values) + "\">" + avgValue + "</div></td>";
+        var toneInfo = tone(values);
+        cells[i][t] = {
+          count: values.length,
+          avg: toneInfo.avg,
+          style: toneInfo.style,
+          label: values.length ? intensityLabel(toneInfo.avg) : "비어 있음"
+        };
+
+        if (values.length && (!peak || toneInfo.avg > peak.avg || (toneInfo.avg === peak.avg && values.length > peak.count))) {
+          peak = {
+            day: i,
+            slot: t,
+            avg: toneInfo.avg,
+            count: values.length
+          };
+        }
       }
-      html += "</tr>";
     }
 
-    html += "</tbody></table>";
+    var summaryTitle = peak ? dayLabels[peak.day] + " · " + timeLabels[peak.slot] : "아직 데이터 없음";
+    var summaryText = peak
+      ? "평균 감정 강도 " + peak.avg.toFixed(1) + "점 · 해당 구간 기록 " + peak.count + "건"
+      : "기록이 쌓이면 가장 불안이 높은 시간대를 여기서 바로 보여줍니다.";
+
+    var html = "<div class=\"heatmap-shell\">";
+    html += "<div class=\"heatmap-head\">";
+    html += "<div class=\"heatmap-summary\">";
+    html += "<span class=\"heatmap-summary-label\">이번 주 최고 긴장 구간</span>";
+    html += "<strong>" + summaryTitle + "</strong>";
+    html += "<p>" + summaryText + "</p>";
+    html += "</div>";
+    html += "<div class=\"heatmap-legend\">";
+    html += "<span class=\"heatmap-legend-title\">강도 범례</span>";
+    html += "<div class=\"heatmap-legend-scale\"><span>낮음</span><div class=\"heatmap-legend-bar\"></div><span>높음</span></div>";
+    html += "</div>";
+    html += "</div>";
+    html += "<div class=\"heatmap-grid\">";
+    html += "<div class=\"heatmap-axis heatmap-corner\">요일</div>";
+    for (i = 0; i < timeLabels.length; i++) {
+      html += "<div class=\"heatmap-axis\">" + timeLabels[i] + "</div>";
+    }
+    
+    for (i = 0; i < dayLabels.length; i++) {
+      html += "<div class=\"heatmap-row-label\">" + dayLabels[i] + "</div>";
+      for (var slotIndex = 0; slotIndex < timeLabels.length; slotIndex++) {
+        var cell = cells[i][slotIndex];
+        var isPeak = peak && peak.day === i && peak.slot === slotIndex;
+        var className = "heatmap-cell" + (cell.count ? "" : " is-empty") + (isPeak ? " is-peak" : "");
+        html += "<div class=\"" + className + "\" style=\"" + cell.style + "\">";
+        if (isPeak) html += "<span class=\"heatmap-peak-flag\">PEAK</span>";
+        html += "<div class=\"heatmap-value\">" + (cell.count ? cell.avg.toFixed(1) : "·") + "</div>";
+        html += "<div class=\"heatmap-meta\"><span>" + (cell.count ? cell.count + "건" : "기록 없음") + "</span><span>" + cell.label + "</span></div>";
+        html += "</div>";
+      }
+    }
+
+    html += "</div></div>";
     $("heatmap").innerHTML = html;
   }
 
@@ -1740,8 +1799,8 @@
 
   function loadDemoData() {
     importBackupPayload(buildDemoBackupPayload(), {
-      statusMessage: "28건 대시보드 데모를 불러왔습니다",
-      toastMessage: "대시보드 확인용 더미 데이터 28건을 불러왔습니다."
+      statusMessage: "대시보드용 테스트 데이터 28건을 불러왔습니다",
+      toastMessage: "대시보드 확인용 테스트 데이터 28건을 불러왔습니다."
     });
   }
 
