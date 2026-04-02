@@ -315,6 +315,91 @@
     };
   }
 
+  function buildDemoRecords() {
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var now = today.getTime();
+    var day = 24 * 60 * 60 * 1000;
+    var hourSlots = [
+      { key: "morning", hour: 9 },
+      { key: "afternoon", hour: 14 },
+      { key: "evening", hour: 20 },
+      { key: "night", hour: 2 }
+    ];
+    var demoGrid = {
+      morning: [
+        { situation: "월요일 아침 수학 단원평가 전에 친구들이 마지막 문제를 빨리 풀었다고 말했다.", thought: "시작도 전에 나는 이미 뒤처졌어.", emotion: "불안", intensity: 7, behavior: "문제를 읽기 전에 답부터 맞혀보려다 더 긴장했다." },
+        { situation: "화요일 아침 영어 단어 테스트 직전, 외운 단어가 순간적으로 잘 떠오르지 않았다.", thought: "하나만 틀려도 이번 주 공부는 망한 거야.", emotion: "초조", intensity: 6, behavior: "테스트 시작 전까지 같은 단어만 계속 중얼거렸다." },
+        { situation: "수요일 아침 과학 쪽지시험지를 받자 지난번 실수가 떠올랐다.", thought: "지난번에 틀렸으니 오늘도 분명 또 틀릴 거야.", emotion: "긴장", intensity: 7, behavior: "문제를 순서대로 보지 못하고 쉬운 문제만 찾았다." },
+        { situation: "목요일 아침 자습 시간에 국어 수행평가 발표 순서를 확인했다.", thought: "내 차례가 오면 분명 말문이 막힐 거야.", emotion: "불안", intensity: 8, behavior: "발표 원고를 읽기만 하고 소리 내 연습은 하지 못했다." },
+        { situation: "금요일 아침 한국사 암기 퀴즈 전에 친구가 다 외웠다고 말했다.", thought: "나는 아직 부족하니까 이번에도 가장 못 볼 거야.", emotion: "위축", intensity: 6, behavior: "아는 내용도 다시 확인하느라 시작 직전까지 집중이 흔들렸다." },
+        { situation: "토요일 오전 모의고사 시작 벨이 울리기 전, 실전 시간 압박이 크게 느껴졌다.", thought: "조금만 막혀도 전체 시험을 다 망칠 거야.", emotion: "불안", intensity: 8, behavior: "쉬운 문제도 서두르며 풀다가 계산 실수를 냈다." },
+        { situation: "일요일 오전 주간 계획을 세우는데 남은 공부량이 많아 보였다.", thought: "이 양을 다 못 끝내면 나는 계획 관리도 못하는 사람이야.", emotion: "압박감", intensity: 7, behavior: "계획표만 고치고 실제 공부 시작은 미뤘다." }
+      ],
+      afternoon: [
+        { situation: "월요일 오후 수학 오답 정리 시간에 틀린 문제가 예상보다 많았다.", thought: "틀린 개수가 많으니까 나는 기본기가 아예 없는 거야.", emotion: "좌절", intensity: 7, behavior: "오답 원인을 보지 않고 문제집을 덮었다." },
+        { situation: "화요일 오후 영어 발표 리허설에서 한 문장을 더듬었다.", thought: "한 번 더듬었으니 본 발표는 완전히 실패할 거야.", emotion: "수치심", intensity: 6, behavior: "남은 리허설 참여를 피하고 뒤에서 조용히 있었다." },
+        { situation: "수요일 오후 체육 후 피곤한 상태로 자습을 시작했는데 집중이 잘 안 됐다.", thought: "지금 집중이 안 되면 오늘 공부는 의미가 없어.", emotion: "짜증", intensity: 5, behavior: "해야 할 과목 대신 쉬운 정리만 반복했다." },
+        { situation: "목요일 오후 사회 수행평가 피드백에서 보완할 점을 들었다.", thought: "보완하라고 한 건 결국 전체가 별로였다는 뜻이야.", emotion: "실망", intensity: 6, behavior: "수정 계획을 세우지 않고 피드백 문서를 닫았다." },
+        { situation: "금요일 오후 학원 테스트에서 친구보다 점수가 낮게 나왔다.", thought: "친구보다 낮으니 나는 계속 뒤처질 거야.", emotion: "열등감", intensity: 7, behavior: "결과를 오래 보다가 다음 수업 준비를 늦게 했다." },
+        { situation: "토요일 오후 독서실에서 계획보다 진도가 늦다는 걸 확인했다.", thought: "속도가 느린 걸 보니 나는 원래 공부 체력이 부족해.", emotion: "무기력", intensity: 6, behavior: "남은 분량 계산만 계속하고 손은 움직이지 않았다." },
+        { situation: "일요일 오후 주간 과제 제출 목록을 보니 아직 안 끝난 항목이 남아 있었다.", thought: "끝내지 못한 게 있으니 나는 책임감이 없는 사람이야.", emotion: "죄책감", intensity: 7, behavior: "하나씩 끝내기보다 모든 과제를 동시에 붙잡았다." }
+      ],
+      evening: [
+        { situation: "월요일 저녁 학원 숙제를 다시 보는데 아침에 틀린 문제가 계속 눈에 밟혔다.", thought: "이 문제를 또 못 풀면 나는 정말 수학이 안 맞아.", emotion: "초조", intensity: 7, behavior: "비슷한 문제를 스킵하고 해설만 먼저 읽었다." },
+        { situation: "화요일 저녁 발표 자료를 정리하다 친구의 발표 슬라이드를 보게 됐다.", thought: "친구 것보다 덜 좋아 보이니까 나는 준비를 잘못한 거야.", emotion: "위축", intensity: 6, behavior: "디자인만 계속 고치고 발표 연습은 하지 않았다." },
+        { situation: "수요일 저녁 영어 듣기 숙제를 하다 모르는 표현이 연속으로 나왔다.", thought: "이 정도도 안 들리면 내 영어는 이미 늦었어.", emotion: "불안", intensity: 7, behavior: "틀린 부분 복습 대신 영상을 멈추고 딴짓을 했다." },
+        { situation: "목요일 저녁 과학 탐구 보고서를 마감 전에 다시 읽어 보았다.", thought: "완벽하지 않으면 제출해도 의미가 없어.", emotion: "압박감", intensity: 8, behavior: "수정만 반복하다 제출 버튼을 늦게 눌렀다." },
+        { situation: "금요일 저녁 일주일 시험 결과를 정리하다 아쉬운 과목이 눈에 띄었다.", thought: "잘한 과목이 있어도 부족한 한 과목 때문에 이번 주는 실패야.", emotion: "허탈함", intensity: 6, behavior: "복습 우선순위를 정하지 못하고 멍하게 있었다." },
+        { situation: "토요일 저녁 온라인 강의를 듣는데 진도를 따라가는 친구 생각이 났다.", thought: "다른 애들은 빨리 가는데 나만 늦으니 이미 차이가 벌어졌어.", emotion: "불안", intensity: 7, behavior: "배속을 올렸다가 내용을 놓치고 다시 되돌렸다." },
+        { situation: "일요일 저녁 내일 학교 갈 준비를 하며 이번 주 부족한 공부량을 떠올렸다.", thought: "주말에 다 못했으니 다음 주도 시작부터 꼬일 거야.", emotion: "걱정", intensity: 7, behavior: "가방만 반복해서 정리하고 취침 시간이 늦어졌다." }
+      ],
+      night: [
+        { situation: "월요일 밤 잠들기 전 오늘 틀린 문제 장면이 계속 떠올랐다.", thought: "내일도 똑같이 틀릴 거라서 미리 포기하는 게 나아.", emotion: "체념", intensity: 6, behavior: "내일 할 복습 계획을 적지 않고 그냥 누워 있었다." },
+        { situation: "화요일 밤 발표 생각이 나서 휴대폰으로 친구 반응을 상상하게 됐다.", thought: "애들이 속으로 다 어색하다고 생각할 거야.", emotion: "불안", intensity: 7, behavior: "잠들기 전에 발표 영상을 지우고 다시 찍을지 고민만 했다." },
+        { situation: "수요일 밤 공부 일지를 쓰다가 집중 안 된 시간만 크게 보였다.", thought: "오늘 흐트러졌으니 나는 자기관리가 안 되는 사람이야.", emotion: "자책", intensity: 6, behavior: "잘한 부분은 적지 않고 부족한 점만 여러 줄 적었다." },
+        { situation: "목요일 밤 수행평가 제출 후에도 문장 하나가 계속 신경 쓰였다.", thought: "그 한 문장 때문에 전체 평가가 낮아질 거야.", emotion: "걱정", intensity: 5, behavior: "제출한 파일을 다시 열어볼 수 없는데도 계속 떠올렸다." },
+        { situation: "금요일 밤 일주일 계획표를 보다 빠진 공부 칸이 눈에 들어왔다.", thought: "비어 있는 칸이 있으니 나는 계획을 지킬 자격이 없어.", emotion: "죄책감", intensity: 6, behavior: "다음 주 계획을 지나치게 빽빽하게 다시 짰다." },
+        { situation: "토요일 밤 모의고사 채점 결과를 확인한 뒤 비교 점수가 생각났다.", thought: "이 점수면 노력해도 상위권은 절대 못 갈 거야.", emotion: "무기력", intensity: 8, behavior: "오답노트는 미루고 일찍 불을 끄고 누워 있었다." },
+        { situation: "일요일 밤 다음 주 할 일을 정리하는데 해야 할 항목이 너무 많아 보였다.", thought: "이걸 다 못 해내면 나는 또 한 주를 실패로 시작하는 거야.", emotion: "압박감", intensity: 8, behavior: "우선순위를 정하지 못하고 계획 앱만 계속 수정했다." }
+      ]
+    };
+    var built = [];
+
+    for (var dayIndex = 0; dayIndex < 7; dayIndex++) {
+      for (var slotIndex = 0; slotIndex < hourSlots.length; slotIndex++) {
+        var slot = hourSlots[slotIndex];
+        var payload = demoGrid[slot.key][dayIndex];
+        var record = {
+          id: "demo-record-" + String(dayIndex + 1) + "-" + slot.key,
+          date: new Date(now + (dayIndex - 6) * day + slot.hour * 60 * 60 * 1000).toISOString(),
+          situation: payload.situation,
+          thought: payload.thought,
+          emotion: payload.emotion,
+          intensity: payload.intensity,
+          behavior: payload.behavior,
+          analysis: null
+        };
+        record.analysis = getRuleBasedAnalysis(record, "테스트용 더미 데이터는 로컬 분석으로 생성되었습니다.");
+        built.push(record);
+      }
+    }
+
+    return built;
+  }
+
+  function buildDemoBackupPayload() {
+    return {
+      app: "cbt-mind-lab",
+      version: BACKUP_VERSION,
+      exportedAt: new Date().toISOString(),
+      records: buildDemoRecords(),
+      settings: {
+        model: getModelName()
+      }
+    };
+  }
+
   function updateBackupStatus(extraText) {
     var el = $("backup-status");
     if (!el) return;
@@ -346,7 +431,15 @@
     toast("기록 백업 파일을 내보냈습니다.", "success");
   }
 
-  function importBackupPayload(payload) {
+  function importDemoRecords() {
+    importBackupPayload(buildDemoBackupPayload(), {
+      statusMessage: "28건 더미 기록을 불러왔습니다",
+      toastMessage: "7일 x 4시간대 더미 기록 28건을 불러왔습니다."
+    });
+  }
+
+  function importBackupPayload(payload, options) {
+    options = options || {};
     var rawRecords = null;
 
     if (Array.isArray(payload)) {
@@ -390,8 +483,8 @@
     invalidateWeeklyCache();
     refreshDashboard();
     renderReport("local");
-    updateBackupStatus("백업 파일을 불러왔습니다");
-    toast("백업 파일을 불러와 로컬 저장소에 반영했습니다.", "success");
+    updateBackupStatus(options.statusMessage || "백업 파일을 불러왔습니다");
+    toast(options.toastMessage || "백업 파일을 불러와 로컬 저장소에 반영했습니다.", "success");
   }
 
   function getDistMeta(name) {
@@ -1646,56 +1739,10 @@
   }
 
   function loadDemoData() {
-    var now = Date.now();
-    var day = 24 * 60 * 60 * 1000;
-    var demo = [
-      { off: -6, key: "exam" },
-      { off: -5, key: "presentation" },
-      { off: -4, key: "deadline" },
-      { off: -3, data: {
-        situation: "국어 시험에서 85점을 받았는데 예상보다 낮아서 성적표를 계속 다시 봤다.",
-        thought: "85점이면 거의 0점이나 마찬가지야. 상위권은 다 95점 이상인데 나만 못했어.",
-        emotion: "수치심",
-        intensity: 6,
-        behavior: "성적표를 가방 안쪽에 숨기고 복습 계획을 세우지 않았다."
-      }},
-      { off: -2, data: {
-        situation: "학원에서 선생님이 이 문제는 쉬웠다고 말했는데 나는 못 풀었다.",
-        thought: "다들 쉬운데 나만 못 풀었어. 나는 바보 같고 앞으로도 계속 이럴 거야.",
-        emotion: "무기력",
-        intensity: 8,
-        behavior: "남은 시간 내내 문제를 보지 못하고 멍하게 앉아 있었다."
-      }},
-      { off: -1, data: {
-        situation: "친구가 요즘 공부 많이 하네라고 말했을 때 순간적으로 마음이 불편했다.",
-        thought: "저 말은 나를 비꼬는 거야. 속으로는 내가 못한다고 생각할 거야.",
-        emotion: "짜증",
-        intensity: 5,
-        behavior: "대답을 짧게 하고 자리를 피했다."
-      }}
-    ];
-
-    for (var i = 0; i < demo.length; i++) {
-      var payload = demo[i].data || SAMPLE_RECORDS[demo[i].key];
-      var record = {
-        id: now + demo[i].off * day + Math.floor(Math.random() * 1000),
-        date: new Date(now + demo[i].off * day + 1000 * 60 * 60 * (i + 1)).toISOString(),
-        situation: payload.situation,
-        thought: payload.thought,
-        emotion: payload.emotion,
-        intensity: payload.intensity,
-        behavior: payload.behavior,
-        analysis: null
-      };
-      record.analysis = getRuleBasedAnalysis(record, "데모 데이터는 로컬 분석으로 생성되었습니다.");
-      records.unshift(record);
-    }
-
-    saveRecords();
-    invalidateWeeklyCache();
-    refreshDashboard();
-    renderReport(currentReportMode);
-    toast("데모 데이터가 추가되었습니다.", "success");
+    importBackupPayload(buildDemoBackupPayload(), {
+      statusMessage: "28건 대시보드 데모를 불러왔습니다",
+      toastMessage: "대시보드 확인용 더미 데이터 28건을 불러왔습니다."
+    });
   }
 
   function updateNav() {
@@ -1807,6 +1854,7 @@
     $("test-api").addEventListener("click", testGeminiConnection);
 
     $("export-records").addEventListener("click", exportRecordsBackup);
+    $("import-demo-records").addEventListener("click", importDemoRecords);
 
     $("import-records").addEventListener("click", function() {
       $("backup-file").click();
