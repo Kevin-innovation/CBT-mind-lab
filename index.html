@@ -1,0 +1,4372 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마음CBT 랩 | 인지행동치료 기반 학습 불안 완화 AI 시스템</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --bg: #f4efe7;
+    --paper: #fffdf8;
+    --paper-soft: rgba(255, 255, 255, 0.78);
+    --ink: #18221d;
+    --muted: #6f766f;
+    --line: #ded5c6;
+    --line-strong: #c8bea9;
+    --green: #2f6f58;
+    --green-soft: #dceddf;
+    --green-deep: #173a2d;
+    --sand: #ead8bb;
+    --sand-deep: #b97d47;
+    --rose: #b85d4c;
+    --amber: #d1a34b;
+    --shadow: 0 18px 48px rgba(24, 34, 29, 0.08);
+    --radius-xl: 28px;
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    color: var(--ink);
+    font-family: "Pretendard", sans-serif;
+    background:
+      radial-gradient(circle at top left, rgba(220, 237, 223, 0.95), transparent 32%),
+      radial-gradient(circle at 85% 10%, rgba(234, 216, 187, 0.82), transparent 24%),
+      linear-gradient(180deg, #fbf7f0 0%, #f4efe7 48%, #f7f3eb 100%);
+  }
+
+  a {
+    color: inherit;
+  }
+
+  button,
+  input,
+  textarea {
+    font: inherit;
+  }
+
+  button {
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  textarea,
+  input {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: #fff;
+    padding: 14px 16px;
+    color: var(--ink);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+  }
+
+  textarea:focus,
+  input:focus {
+    border-color: rgba(47, 111, 88, 0.55);
+    box-shadow: 0 0 0 4px rgba(47, 111, 88, 0.1);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 140px;
+  }
+
+  ::selection {
+    background: rgba(47, 111, 88, 0.14);
+  }
+
+  ::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #d8cfbf;
+    border-radius: 999px;
+  }
+
+  .container {
+    width: min(1180px, calc(100% - 32px));
+    margin: 0 auto;
+  }
+
+  .section {
+    position: relative;
+    padding: 110px 0;
+  }
+
+  .section.alt {
+    background: rgba(255, 255, 255, 0.56);
+    backdrop-filter: blur(10px);
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(47, 111, 88, 0.2);
+    background: rgba(220, 237, 223, 0.9);
+    color: var(--green-deep);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
+
+  .eyebrow.badge-deep {
+    background: #173a2d;
+    color: #fff;
+    border-color: #173a2d;
+  }
+
+  .eyebrow.badge-sand {
+    background: #b97d47;
+    color: #fff;
+    border-color: #b97d47;
+  }
+
+  .eyebrow.badge-green {
+    background: #2f6f58;
+    color: #fff;
+    border-color: #2f6f58;
+  }
+
+  .eyebrow.badge-rose {
+    background: #b85d4c;
+    color: #fff;
+    border-color: #b85d4c;
+  }
+
+  .eyebrow.badge-amber {
+    background: #8a651d;
+    color: #fff;
+    border-color: #8a651d;
+  }
+
+  .section-head {
+    max-width: 980px;
+    margin-bottom: 38px;
+    display: grid;
+    gap: 12px;
+  }
+
+  .section-title {
+    margin: 0;
+    font-size: clamp(34px, 4vw, 48px);
+    line-height: 1.08;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+  }
+
+  .section-copy {
+    margin: 0;
+    color: var(--muted);
+    max-width: 920px;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    border-bottom: 1px solid rgba(222, 213, 198, 0.72);
+    background: rgba(251, 247, 240, 0.72);
+    backdrop-filter: blur(18px);
+  }
+
+  .topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 72px;
+    gap: 16px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  .brand-mark {
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: linear-gradient(135deg, var(--green) 0%, #6ea485 100%);
+    box-shadow: 0 12px 28px rgba(47, 111, 88, 0.25);
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .brand-text strong {
+    font-size: 16px;
+  }
+
+  .brand-text span {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .nav-links a,
+  .mobile-menu a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+
+  .nav-links a.active,
+  .mobile-menu a.active,
+  .nav-links a:hover,
+  .mobile-menu a:hover {
+    color: var(--green);
+  }
+
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .mobile-toggle {
+    display: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--green-deep);
+  }
+
+  .mobile-menu {
+    display: none;
+    padding: 0 0 16px;
+  }
+
+  .mobile-menu.open {
+    display: block;
+  }
+
+  .mobile-menu-inner {
+    display: grid;
+    gap: 12px;
+    padding: 16px 0 0;
+  }
+
+  .hero {
+    overflow: hidden;
+    padding: 86px 0 78px;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  .hero-copy {
+    position: relative;
+    z-index: 1;
+    padding: 4px 0 0;
+  }
+
+  .hero-title {
+    margin: 14px 0 12px;
+    font-size: clamp(32px, 3.4vw, 40px);
+    line-height: 1.12;
+    letter-spacing: -0.05em;
+    white-space: nowrap;
+  }
+
+  .hero-title span {
+    color: var(--green);
+  }
+
+  .hero-desc {
+    max-width: 1020px;
+    margin: 0 0 24px;
+    color: var(--muted);
+    font-size: 17px;
+    line-height: 1.72;
+  }
+
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 50px;
+    padding: 0 18px;
+    border-radius: 999px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn.primary {
+    color: #fff;
+    background: linear-gradient(135deg, var(--green) 0%, #5f9179 100%);
+    box-shadow: 0 14px 32px rgba(47, 111, 88, 0.28);
+  }
+
+  .btn.secondary {
+    color: var(--green-deep);
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(47, 111, 88, 0.16);
+  }
+
+  .btn.ghost {
+    color: var(--muted);
+    background: rgba(255, 255, 255, 0.62);
+    border: 1px solid var(--line);
+  }
+
+  .micro-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 0 24px;
+  }
+
+  .micro-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(222, 213, 198, 0.9);
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    border: 1px solid transparent;
+  }
+
+  .status-good {
+    background: rgba(220, 237, 223, 0.95);
+    color: var(--green-deep);
+    border-color: rgba(47, 111, 88, 0.18);
+  }
+
+  .status-warn {
+    background: rgba(255, 244, 223, 0.95);
+    color: #7b5b24;
+    border-color: rgba(209, 163, 75, 0.25);
+  }
+
+  .status-bad {
+    background: rgba(248, 226, 223, 0.95);
+    color: #7b3228;
+    border-color: rgba(184, 93, 76, 0.25);
+  }
+
+  .hero-side {
+    position: relative;
+  }
+
+  .hero-card {
+    position: relative;
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    border: 1px solid rgba(222, 213, 198, 0.9);
+    background: linear-gradient(180deg, rgba(255, 253, 248, 0.9) 0%, rgba(255, 248, 239, 0.78) 100%);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .hero-card::before {
+    content: "";
+    position: absolute;
+    inset: auto -60px -70px auto;
+    width: 220px;
+    height: 220px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(220, 237, 223, 0.85) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .hero-card-head strong {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 28px;
+    letter-spacing: -0.04em;
+  }
+
+  .hero-card-head p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .project-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 18px 0 22px;
+  }
+
+  .metric {
+    min-height: 132px;
+    padding: 18px 20px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(222, 213, 198, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .metric strong {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 44px;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  .metric span {
+    color: var(--green-deep);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .abc-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .abc-card {
+    min-height: 128px;
+    padding: 18px 20px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(222, 213, 198, 0.9);
+  }
+
+  .abc-letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+
+  .abc-card strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 15px;
+  }
+
+  .abc-card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .story-grid,
+  .goals-grid,
+  .feature-grid,
+  .plan-grid,
+  .setup-grid,
+  .record-grid,
+  .chart-grid,
+  .report-insight-grid {
+    display: grid;
+    gap: 18px;
+  }
+
+  .story-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .goals-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-top: 18px;
+    grid-auto-rows: 1fr;
+  }
+
+  .feature-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-bottom: 24px;
+    grid-auto-rows: 1fr;
+  }
+
+  .plan-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 26px 0 32px;
+    grid-auto-rows: 1fr;
+  }
+
+  .setup-grid {
+    grid-template-columns: 0.9fr 1.1fr;
+    align-items: stretch;
+  }
+
+  .record-grid {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    gap: 22px;
+  }
+
+  .record-grid > .panel {
+    min-height: 720px;
+  }
+
+  .chart-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: 18px;
+  }
+
+  .report-insight-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .card,
+  .panel,
+  .chart-card,
+  .report-panel,
+  .empty-card {
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(222, 213, 198, 0.88);
+    background: var(--paper-soft);
+    backdrop-filter: blur(14px);
+    box-shadow: var(--shadow);
+  }
+
+  .card {
+    padding: 24px;
+  }
+
+  .panel,
+  .report-panel,
+  .empty-card {
+    padding: 24px;
+  }
+
+  .panel {
+    height: 100%;
+  }
+
+  .chart-card {
+    padding: 22px;
+  }
+
+  .card h3,
+  .panel h3,
+  .chart-card h3,
+  .report-panel h3 {
+    margin: 0 0 12px;
+    font-size: 20px;
+    letter-spacing: -0.03em;
+  }
+
+  .card p,
+  .panel p,
+  .chart-card p,
+  .report-panel p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  .story-text {
+    font-size: 15px;
+  }
+
+  .story-text p + p {
+    margin-top: 12px;
+  }
+
+  .goal-card,
+  .feature-card,
+  .plan-card,
+  .distortion-card,
+  .setup-panel,
+  .status-card,
+  .analysis-card,
+  .report-stat,
+  .record-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 22px;
+    border: 1px solid rgba(222, 213, 198, 0.88);
+    background: rgba(255, 255, 255, 0.84);
+  }
+
+  .goal-card,
+  .feature-card,
+  .plan-card,
+  .setup-panel,
+  .status-card,
+  .analysis-card,
+  .report-stat {
+    padding: 22px;
+  }
+
+  .distortion-card {
+    padding: 18px;
+    min-height: 134px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .goal-card,
+  .feature-card,
+  .plan-card {
+    min-height: 210px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .goal-card strong,
+  .feature-card strong,
+  .plan-card strong,
+  .setup-panel strong,
+  .status-card strong,
+  .analysis-card strong,
+  .report-stat strong {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 18px;
+    letter-spacing: -0.03em;
+  }
+
+  .icon-box {
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    margin-bottom: 14px;
+    font-size: 18px;
+  }
+
+  .icon-green {
+    background: rgba(220, 237, 223, 0.95);
+    color: var(--green);
+  }
+
+  .icon-sand {
+    background: rgba(248, 235, 215, 0.95);
+    color: var(--sand-deep);
+  }
+
+  .icon-rose {
+    background: rgba(248, 226, 223, 0.95);
+    color: var(--rose);
+  }
+
+  .icon-amber {
+    background: rgba(255, 244, 223, 0.95);
+    color: #8a651d;
+  }
+
+  .plan-index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    margin-bottom: 14px;
+    border-radius: 999px;
+    background: var(--green-deep);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .distortion-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .distortion-card {
+    grid-column: span 3;
+  }
+
+  .distortion-card:nth-child(n+5) {
+    grid-column: span 4;
+  }
+
+  .distortion-card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .distortion-card-head span {
+    display: inline-flex;
+    width: 34px;
+    height: 34px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 14px;
+  }
+
+  .distortion-card p {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .helper {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .small-muted {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.65;
+  }
+
+  .field {
+    display: grid;
+    gap: 8px;
+  }
+
+  .field-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--green-deep);
+  }
+
+  .field-row {
+    display: grid;
+    gap: 14px;
+    margin-top: 18px;
+  }
+
+  .setup-actions,
+  .report-actions,
+  .wizard-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .setup-status-row,
+  .report-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .tabs {
+    display: inline-flex;
+    padding: 6px;
+    gap: 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(222, 213, 198, 0.9);
+    margin-bottom: 18px;
+  }
+
+  .tab-btn {
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+  }
+
+  .tab-btn.active {
+    background: var(--green);
+    color: #fff;
+  }
+
+  .wizard-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .progress {
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(222, 213, 198, 0.75);
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+
+  .progress > span {
+    display: block;
+    height: 100%;
+    width: 25%;
+    background: linear-gradient(90deg, var(--green) 0%, #6ea485 100%);
+    transition: width 0.28s ease;
+  }
+
+  .step-dots {
+    display: flex;
+    gap: 7px;
+  }
+
+  .step-dots span {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #d9d0bf;
+  }
+
+  .step-dots span.active {
+    background: var(--green);
+  }
+
+  .step-panel {
+    display: none;
+  }
+
+  .step-panel.active {
+    display: block;
+  }
+
+  .step-panel h3 {
+    margin-bottom: 8px;
+    font-size: 18px;
+  }
+
+  .step-panel p {
+    margin-bottom: 14px;
+  }
+
+  .emotion-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .emotion-chip {
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.82);
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+  }
+
+  .emotion-chip.selected {
+    background: var(--green);
+    color: #fff;
+    border-color: var(--green);
+    box-shadow: 0 10px 22px rgba(47, 111, 88, 0.18);
+  }
+
+  .range-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  input[type="range"] {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 8px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #7eb295 0%, #d1a34b 55%, #c56b57 100%);
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    margin-top: -7px;
+    border-radius: 999px;
+    border: 3px solid var(--green);
+    background: #fff;
+    box-shadow: 0 8px 18px rgba(24, 34, 29, 0.12);
+  }
+
+  input[type="range"]::-moz-range-track {
+    height: 8px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #7eb295 0%, #d1a34b 55%, #c56b57 100%);
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    border: 3px solid var(--green);
+    background: #fff;
+    box-shadow: 0 8px 18px rgba(24, 34, 29, 0.12);
+  }
+
+  .status-line {
+    min-height: 22px;
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .chat-panel {
+    display: none;
+  }
+
+  .chat-panel.active {
+    display: block;
+  }
+
+  .chat-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 570px;
+    border-radius: 24px;
+    border: 1px solid rgba(222, 213, 198, 0.88);
+    background: rgba(255, 255, 255, 0.84);
+    overflow: hidden;
+  }
+
+  .chat-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 18px 16px;
+    border-bottom: 1px solid rgba(222, 213, 198, 0.72);
+    background: rgba(220, 237, 223, 0.42);
+  }
+
+  .chat-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: linear-gradient(135deg, var(--green) 0%, #6ea485 100%);
+  }
+
+  .chat-log {
+    flex: 1;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(251, 247, 240, 0.7) 100%);
+  }
+
+  .bubble-row {
+    display: flex;
+  }
+
+  .bubble-row.user {
+    justify-content: flex-end;
+  }
+
+  .bubble {
+    max-width: min(80%, 560px);
+    padding: 14px 16px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.7;
+    white-space: pre-line;
+  }
+
+  .bubble.ai {
+    background: #eaf5ed;
+    color: var(--green-deep);
+    border-top-left-radius: 6px;
+  }
+
+  .bubble.user {
+    background: linear-gradient(135deg, #c98755 0%, #b86d56 100%);
+    color: #fff;
+    border-top-right-radius: 6px;
+  }
+
+  .typing {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 14px;
+    border-radius: 18px;
+    background: #eaf5ed;
+  }
+
+  .typing span {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--green);
+    animation: bounce 1.2s ease-in-out infinite;
+  }
+
+  .typing span:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  .typing span:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  @keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.35; }
+    40% { transform: translateY(-5px); opacity: 1; }
+  }
+
+  .chat-input-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    padding: 14px 18px 18px;
+    border-top: 1px solid rgba(222, 213, 198, 0.72);
+    background: rgba(255, 255, 255, 0.86);
+  }
+
+  .side-stack {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    align-items: stretch;
+    align-content: stretch;
+    grid-auto-rows: 1fr;
+  }
+
+  .steps-list,
+  .sample-list,
+  .bullet-list,
+  .text-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .step-item,
+  .sample-btn,
+  .bullet-item,
+  .text-item {
+    display: flex;
+    align-items: start;
+    gap: 12px;
+  }
+
+  .step-index,
+  .bullet-mark {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    flex-shrink: 0;
+    color: var(--green-deep);
+    background: rgba(220, 237, 223, 0.95);
+  }
+
+  .sample-btn {
+    width: 100%;
+    min-height: 0;
+    height: 100%;
+    padding: 16px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(222, 213, 198, 0.88);
+    text-align: left;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .sample-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(24, 34, 29, 0.08);
+  }
+
+  .sample-btn strong {
+    margin-bottom: 4px;
+    font-size: 14px;
+  }
+
+  .status-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 372px;
+  }
+
+  .mode-card {
+    gap: 16px;
+    justify-content: space-between;
+  }
+
+  .sync-card {
+    gap: 14px;
+    justify-content: space-between;
+  }
+
+  .sync-actions {
+    display: grid;
+    gap: 10px;
+    margin-top: auto;
+  }
+
+  .sync-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .flow-card .steps-list {
+    flex: 1;
+    gap: 12px;
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+  }
+
+  .sample-card .sample-list {
+    flex: 1;
+    gap: 12px;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+  }
+
+  .status-card .small-muted,
+  .sample-btn .small-muted,
+  .step-item .small-muted,
+  .bullet-item .small-muted {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .empty-card {
+    text-align: center;
+  }
+
+  .empty-card .empty-mark {
+    width: 86px;
+    height: 86px;
+    margin: 0 auto 16px;
+    border-radius: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: var(--line-strong);
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(222, 213, 198, 0.88);
+  }
+
+  .dashboard-shell {
+    display: grid;
+    gap: 18px;
+  }
+
+  .chart-card h3,
+  .report-panel h3 {
+    margin-bottom: 8px;
+  }
+
+  .chart-note {
+    margin-bottom: 14px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .chart-wrap {
+    height: 260px;
+  }
+
+  .heatmap-wrap {
+    overflow-x: auto;
+  }
+
+  .heat-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 8px;
+  }
+
+  .heat-table th {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .heat-table td:first-child {
+    color: var(--green-deep);
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .heat-cell {
+    min-width: 68px;
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .record-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .record-item {
+    padding: 18px;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    cursor: pointer;
+  }
+
+  .record-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px rgba(24, 34, 29, 0.08);
+  }
+
+  .record-head {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+
+  .record-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+  }
+
+  .badge.green {
+    background: rgba(220, 237, 223, 0.95);
+    color: var(--green-deep);
+  }
+
+  .badge.sand {
+    background: rgba(248, 235, 215, 0.95);
+    color: var(--sand-deep);
+  }
+
+  .badge.gray {
+    background: rgba(244, 239, 231, 0.95);
+    color: var(--muted);
+  }
+
+  .record-title {
+    margin: 0 0 6px;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .record-sub {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .record-score {
+    min-width: 64px;
+    text-align: right;
+  }
+
+  .record-score strong {
+    display: block;
+    font-size: 28px;
+    letter-spacing: -0.04em;
+  }
+
+  .record-score span {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .report-toolbar {
+    margin-bottom: 18px;
+  }
+
+  .report-panel {
+    display: grid;
+    gap: 18px;
+  }
+
+  .report-header {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .report-header h3 {
+    margin: 0 0 8px;
+  }
+
+  .report-header p {
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .report-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .report-stat strong {
+    margin-bottom: 4px;
+    font-size: 28px;
+  }
+
+  .report-stat span {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
+  .report-block {
+    padding: 20px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(222, 213, 198, 0.88);
+  }
+
+  .report-block h4 {
+    margin: 0 0 10px;
+    font-size: 15px;
+  }
+
+  .report-block p {
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.85;
+  }
+
+  .report-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .report-list-item {
+    display: flex;
+    align-items: start;
+    gap: 10px;
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .report-list-item span:first-child {
+    color: var(--green);
+    font-weight: 800;
+  }
+
+  .footer {
+    padding: 48px 0 56px;
+    background: var(--green-deep);
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer strong {
+    display: block;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .footer span,
+  .footer p {
+    color: rgba(220, 237, 223, 0.82);
+    font-size: 13px;
+    line-height: 1.75;
+    margin: 0;
+  }
+
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 120;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    background: rgba(24, 34, 29, 0.42);
+    backdrop-filter: blur(12px);
+  }
+
+  .modal.open {
+    display: flex;
+  }
+
+  .modal-shell {
+    width: min(980px, 100%);
+    max-height: min(90vh, 880px);
+    overflow-y: auto;
+    border-radius: 30px;
+    background: linear-gradient(180deg, rgba(255, 253, 248, 0.96) 0%, rgba(255, 247, 237, 0.96) 100%);
+    border: 1px solid rgba(222, 213, 198, 0.88);
+    box-shadow: 0 28px 70px rgba(24, 34, 29, 0.2);
+  }
+
+  .modal-head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 20px 22px;
+    background: rgba(255, 253, 248, 0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(222, 213, 198, 0.78);
+  }
+
+  .modal-head h3 {
+    margin: 0;
+    font-size: 20px;
+    letter-spacing: -0.03em;
+  }
+
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    color: var(--muted);
+    background: rgba(255, 255, 255, 0.84);
+    border: 1px solid rgba(222, 213, 198, 0.88);
+  }
+
+  .modal-body {
+    padding: 22px;
+  }
+
+  .modal-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .mini-card {
+    padding: 16px;
+    border-radius: 18px;
+    border: 1px solid rgba(222, 213, 198, 0.88);
+    background: rgba(255, 255, 255, 0.84);
+  }
+
+  .mini-card small {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .mini-card p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  .analysis-stack,
+  .text-stack {
+    display: grid;
+    gap: 14px;
+  }
+
+  .analysis-card-head {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .analysis-card-head-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .analysis-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .analysis-score {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--muted);
+  }
+
+  .analysis-card p {
+    font-size: 14px;
+    line-height: 1.85;
+  }
+
+  .analysis-note {
+    margin-top: 10px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(244, 239, 231, 0.84);
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  .text-block {
+    padding: 18px 20px;
+    border-radius: 20px;
+    border: 1px solid rgba(222, 213, 198, 0.88);
+    background: rgba(255, 255, 255, 0.84);
+  }
+
+  .text-block h4 {
+    margin: 0 0 10px;
+    font-size: 15px;
+  }
+
+  .text-block .text-list {
+    gap: 8px;
+  }
+
+  .text-block .text-item {
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .text-block .text-item span:first-child {
+    color: var(--green);
+    font-weight: 800;
+  }
+
+  .toast-box {
+    position: fixed;
+    top: 88px;
+    right: 16px;
+    z-index: 140;
+    display: grid;
+    gap: 10px;
+  }
+
+  .toast {
+    min-width: 280px;
+    max-width: min(380px, calc(100vw - 32px));
+    padding: 13px 16px;
+    border-radius: 16px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 18px 40px rgba(24, 34, 29, 0.16);
+    animation: toast-in 0.28s ease forwards;
+  }
+
+  .toast.success {
+    background: linear-gradient(135deg, var(--green) 0%, #5f9179 100%);
+  }
+
+  .toast.warn {
+    background: linear-gradient(135deg, #b78939 0%, #d1a34b 100%);
+  }
+
+  .toast.error {
+    background: linear-gradient(135deg, #a24638 0%, #c56b57 100%);
+  }
+
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px) translateX(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) translateX(0);
+    }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .orb {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(80px);
+    opacity: 0.46;
+    pointer-events: none;
+  }
+
+  .orb.one {
+    top: 50px;
+    left: -60px;
+    width: 220px;
+    height: 220px;
+    background: rgba(220, 237, 223, 0.95);
+  }
+
+  .orb.two {
+    top: 120px;
+    right: -40px;
+    width: 260px;
+    height: 260px;
+    background: rgba(234, 216, 187, 0.75);
+  }
+
+  .orb.three {
+    bottom: 40px;
+    left: 40%;
+    width: 200px;
+    height: 200px;
+    background: rgba(248, 226, 223, 0.45);
+  }
+
+  @media (max-width: 1100px) {
+    .hero-grid,
+    .story-grid,
+    .setup-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .project-metrics {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .feature-grid,
+    .distortion-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .goals-grid,
+    .plan-grid,
+    .report-stats,
+    .modal-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .hero-title {
+      white-space: normal;
+    }
+
+    .side-stack {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sample-card {
+      grid-column: 1 / -1;
+    }
+
+    .distortion-card,
+    .distortion-card:nth-child(n+5) {
+      grid-column: span 1;
+    }
+  }
+
+  @media (max-width: 840px) {
+    .section {
+      padding: 88px 0;
+    }
+
+    .nav-links,
+    .topbar-actions .desktop-only {
+      display: none;
+    }
+
+    .mobile-toggle {
+      display: inline-flex;
+    }
+
+    .feature-grid,
+    .chart-grid,
+    .report-insight-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .record-grid > .panel {
+      min-height: auto;
+    }
+
+    .status-card {
+      min-height: 0;
+      height: auto;
+    }
+
+    .hero-title {
+      font-size: clamp(34px, 10vw, 44px);
+      white-space: normal;
+    }
+
+    .project-metrics {
+      grid-template-columns: 1fr;
+    }
+
+    .distortion-grid,
+    .goals-grid,
+    .plan-grid,
+    .report-stats,
+    .modal-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .abc-strip {
+      grid-template-columns: 1fr;
+    }
+
+    .side-stack {
+      grid-template-columns: 1fr;
+    }
+
+    .sample-card {
+      grid-column: auto;
+    }
+
+    .hero-card-head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .toast-box {
+      right: 12px;
+      left: 12px;
+    }
+
+    .toast {
+      min-width: 0;
+      max-width: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation: none !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="toast-box" class="toast-box"></div>
+
+<header class="topbar">
+  <div class="container topbar-inner">
+    <a href="#hero" class="brand">
+      <span class="brand-mark"><i class="fa-solid fa-brain"></i></span>
+      <span class="brand-text">
+        <strong>마음CBT 랩</strong>
+        <span>CBT x 학습불안 x Gemini 분석</span>
+      </span>
+    </a>
+    <nav class="nav-links" aria-label="주요 메뉴">
+      <a href="#about" class="nav-link">연구 배경</a>
+      <a href="#design" class="nav-link">기능 설계</a>
+      <a href="#setup" class="nav-link">Gemini 연결</a>
+      <a href="#record" class="nav-link">기록하기</a>
+      <a href="#dashboard" class="nav-link">대시보드</a>
+      <a href="#report" class="nav-link">주간 리포트</a>
+    </nav>
+    <div class="topbar-actions">
+      <a href="#record" class="btn secondary desktop-only"><i class="fa-solid fa-pen-to-square"></i> 기록 시작</a>
+      <button id="mobile-toggle" class="mobile-toggle" aria-label="모바일 메뉴 열기">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="mobile-menu">
+    <div class="container mobile-menu-inner">
+      <a href="#about" class="mobile-link">연구 배경</a>
+      <a href="#design" class="mobile-link">기능 설계</a>
+      <a href="#setup" class="mobile-link">Gemini 연결</a>
+      <a href="#record" class="mobile-link">기록하기</a>
+      <a href="#dashboard" class="mobile-link">대시보드</a>
+      <a href="#report" class="mobile-link">주간 리포트</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="hero" class="hero">
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
+    <div class="container hero-grid">
+      <div class="hero-copy reveal">
+        <span class="eyebrow badge-deep"><i class="fa-solid fa-sparkles"></i> Project 01 · CBT Learning Anxiety Support</span>
+        <h1 class="hero-title">인지행동치료 기반의 <span>학습 불안 완화</span>와 메타인지 강화 AI</h1>
+        <p class="hero-desc">
+          같은 성적도 해석이 다르면 감정과 행동이 달라집니다. 이 프로토타입은 ABC 기록, Gemini 분석, 패턴 시각화,
+          주간 리포트를 한 화면에 묶은 학습 불안 자기점검 도구입니다.
+        </p>
+        <div class="cta-row">
+          <a href="#record" class="btn primary"><i class="fa-solid fa-pen"></i> 지금 기록하기</a>
+          <a href="#setup" class="btn secondary"><i class="fa-solid fa-key"></i> Gemini 연결하기</a>
+        </div>
+        <div class="micro-list">
+          <span class="micro-chip"><i class="fa-solid fa-diagram-project"></i> ABC 기록 구조</span>
+          <span class="micro-chip"><i class="fa-solid fa-robot"></i> Gemini 기반 사고 분석</span>
+          <span class="micro-chip"><i class="fa-solid fa-chart-line"></i> 감정 강도 시각화</span>
+          <span class="micro-chip"><i class="fa-solid fa-file-waveform"></i> 주간 리포트 생성</span>
+        </div>
+        <div id="hero-ai-status" class="status-pill status-warn">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>현재 로컬 규칙 분석 모드입니다.</span>
+        </div>
+      </div>
+
+      <div class="hero-side reveal">
+        <div class="hero-card">
+          <div class="hero-card-head">
+            <div>
+              <strong>문제 인식에서 구현까지</strong>
+              <p>생각이 감정과 행동을 만드는 흐름을 기록과 데이터로 바로 보이게 설계했습니다.</p>
+            </div>
+            <span class="badge green"><i class="fa-solid fa-flask"></i> Prototype</span>
+          </div>
+
+          <div class="project-metrics">
+            <div class="metric">
+              <strong>2</strong>
+              <span>폼·대화형 2가지 기록</span>
+            </div>
+            <div class="metric">
+              <strong>7</strong>
+              <span>핵심 왜곡 7패턴 분석</span>
+            </div>
+            <div class="metric">
+              <strong>3</strong>
+              <span>선·도넛·히트맵 시각화</span>
+            </div>
+            <div class="metric">
+              <strong>1주</strong>
+              <span>7일 누적 AI 리포트</span>
+            </div>
+          </div>
+
+          <div class="abc-strip">
+            <div class="abc-card">
+              <span class="abc-letter" style="background: rgba(248, 235, 215, 0.95); color: var(--sand-deep);">A</span>
+              <strong>사건</strong>
+              <p>시험·과제·발표 같은 실제 사건</p>
+            </div>
+            <div class="abc-card">
+              <span class="abc-letter" style="background: rgba(220, 237, 223, 0.95); color: var(--green);">B</span>
+              <strong>신념 · 생각</strong>
+              <p>자동 사고와 해석 문장</p>
+            </div>
+            <div class="abc-card">
+              <span class="abc-letter" style="background: rgba(248, 226, 223, 0.95); color: var(--rose);">C</span>
+              <strong>감정 · 행동</strong>
+              <p>불안·회피·미루기 반응</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="section alt">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow badge-rose"><i class="fa-solid fa-book-open"></i> 연구 동기와 목적</span>
+        <h2 class="section-title">사건보다 해석이 감정과 행동을 더 크게 만듭니다</h2>
+        <p class="section-copy">
+          같은 시험 결과도 해석 방식에 따라 반응이 달라집니다. 이 프로젝트는 그 차이를 기록하고, 학생이 왜곡된 사고를 스스로 발견하게 만드는 데 초점을 둡니다.
+        </p>
+      </div>
+
+      <div class="story-grid">
+        <article class="card reveal story-text">
+          <h3>왜 이 프로젝트를 만들었는가</h3>
+          <p>
+            CBT는 사건보다 생각이 감정과 행동을 만든다고 봅니다. 하지만 혼자 기록하면 어디가 사실이고 어디서부터 왜곡인지 판단하기 어렵습니다.
+          </p>
+          <p>
+            그래서 학생이 기록만 해도 AI가 왜곡 패턴, 되돌아볼 질문, 대안 사고를 제안하는 도구를 구현했습니다.
+          </p>
+        </article>
+
+        <article class="card reveal">
+          <h3>핵심 연구 질문</h3>
+          <div class="bullet-list">
+            <div class="bullet-item">
+              <span class="bullet-mark">1</span>
+              <div>
+                <strong>학생이 왜곡된 사고를 스스로 찾을 수 있는가</strong>
+                <p class="small-muted">전문 상담사 없이도 사고 패턴을 점검할 수 있게 합니다.</p>
+              </div>
+            </div>
+            <div class="bullet-item">
+              <span class="bullet-mark">2</span>
+              <div>
+                <strong>생각-감정-행동 연결을 데이터로 볼 수 있는가</strong>
+                <p class="small-muted">기록이 쌓일수록 자기이해와 메타인지가 강화되게 합니다.</p>
+              </div>
+            </div>
+            <div class="bullet-item">
+              <span class="bullet-mark">3</span>
+              <div>
+                <strong>생성형 AI가 대안 사고까지 제안할 수 있는가</strong>
+                <p class="small-muted">Gemini API로 왜곡 분류와 질문 생성을 자동화합니다.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="goals-grid">
+        <article class="goal-card reveal">
+          <span class="icon-box icon-green"><i class="fa-solid fa-magnifying-glass-chart"></i></span>
+          <strong>목표 1. 왜곡된 생각 발견</strong>
+          <p class="small-muted">대표 왜곡을 학생이 직접 확인합니다.</p>
+        </article>
+        <article class="goal-card reveal">
+          <span class="icon-box icon-sand"><i class="fa-solid fa-link"></i></span>
+          <strong>목표 2. 연결 고리 시각화</strong>
+          <p class="small-muted">상황-생각-감정-행동을 한눈에 추적합니다.</p>
+        </article>
+        <article class="goal-card reveal">
+          <span class="icon-box icon-rose"><i class="fa-solid fa-brain"></i></span>
+          <strong>목표 3. 메타인지 강화</strong>
+          <p class="small-muted">대안 사고 훈련으로 자기 점검을 강화합니다.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="design" class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow badge-sand"><i class="fa-solid fa-cubes-stacked"></i> 프로젝트 계획</span>
+        <h2 class="section-title">랜딩 설명과 실제 동작을 한 화면에 묶었습니다</h2>
+        <p class="section-copy">
+          기록 입력, AI 분석, 시각화, 주간 리포트까지 하나의 브라우저 앱 흐름으로 연결했습니다.
+        </p>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card reveal">
+          <span class="icon-box icon-sand"><i class="fa-solid fa-list-check"></i></span>
+          <strong>생각 · 감정 · 행동 기록</strong>
+          <p class="small-muted">폼과 채팅 두 방식으로 기록합니다.</p>
+        </article>
+        <article class="feature-card reveal">
+          <span class="icon-box icon-green"><i class="fa-solid fa-robot"></i></span>
+          <strong>Gemini 기반 분석</strong>
+          <p class="small-muted">왜곡·질문·대안 사고를 구조화합니다.</p>
+        </article>
+        <article class="feature-card reveal">
+          <span class="icon-box icon-amber"><i class="fa-solid fa-chart-column"></i></span>
+          <strong>감정 변화 대시보드</strong>
+          <p class="small-muted">감정 강도와 반복 패턴을 그래프로 봅니다.</p>
+        </article>
+        <article class="feature-card reveal">
+          <span class="icon-box icon-rose"><i class="fa-solid fa-file-waveform"></i></span>
+          <strong>주간 AI 리포트</strong>
+          <p class="small-muted">최근 7일 기록을 자동 요약합니다.</p>
+        </article>
+      </div>
+
+      <div class="plan-grid">
+        <article class="plan-card reveal">
+          <span class="plan-index">1</span>
+          <strong>1단계: 입력 + API 연동</strong>
+          <p class="small-muted">입력 후 즉시 AI 반응을 구현합니다.</p>
+        </article>
+        <article class="plan-card reveal">
+          <span class="plan-index">2</span>
+          <strong>2단계: 저장 + 시각화</strong>
+          <p class="small-muted">저장·차트·히트맵을 연결합니다.</p>
+        </article>
+        <article class="plan-card reveal">
+          <span class="plan-index">3</span>
+          <strong>3단계: 주간 리포트 + 완성도</strong>
+          <p class="small-muted">리포트·디자인·오류를 마무리합니다.</p>
+        </article>
+      </div>
+
+      <div class="card reveal">
+        <h3>7가지 인지 왜곡 패턴</h3>
+        <p class="helper" style="margin-bottom: 16px;">Gemini 분석에서도 아래 분류 체계를 기준으로 응답하도록 제한했습니다.</p>
+        <div id="distortion-grid" class="distortion-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="setup" class="section alt">
+    <div class="container setup-grid">
+      <div class="reveal">
+        <span class="eyebrow badge-green"><i class="fa-solid fa-key"></i> Gemini API Setup</span>
+        <h2 class="section-title">Gemini 연결 시 실제 모델 분석으로 전환됩니다</h2>
+        <p class="section-copy">
+          브라우저에서 Gemini REST API를 직접 호출합니다. 키가 없거나 호출에 실패하면 로컬 분석으로 자동 전환됩니다.
+        </p>
+        <div class="card" style="margin-top: 18px;">
+          <div class="bullet-list">
+            <div class="bullet-item">
+              <span class="bullet-mark"><i class="fa-solid fa-lock"></i></span>
+              <div>
+                <strong>보안 주의</strong>
+                <p class="small-muted">키는 localStorage에 저장되므로 개인 테스트용 구성이며, 운영 시에는 서버 프록시가 필요합니다.</p>
+              </div>
+            </div>
+            <div class="bullet-item">
+              <span class="bullet-mark"><i class="fa-solid fa-globe"></i></span>
+              <div>
+                <strong>실행 방식</strong>
+                <p class="small-muted">`file://` 대신 로컬 서버에서 열면 API 호출 오류를 줄일 수 있습니다.</p>
+              </div>
+            </div>
+            <div class="bullet-item">
+              <span class="bullet-mark"><i class="fa-solid fa-repeat"></i></span>
+              <div>
+                <strong>폴백 로직</strong>
+                <p class="small-muted">Gemini 실패 시에도 기록, 그래프, 리포트는 로컬 엔진으로 계속 동작합니다.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="setup-panel reveal">
+        <div class="setup-status-row">
+          <div>
+            <strong style="margin-bottom: 6px;">연결 설정</strong>
+            <p class="small-muted">기본 모델은 `gemini-2.5-flash`로 설정되어 있습니다.</p>
+          </div>
+          <div id="api-status" class="status-pill status-warn">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>저장된 API 키 없음</span>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <label class="field">
+            <span class="field-label">Gemini API Key</span>
+            <input id="api-key" type="password" placeholder="AIza..." autocomplete="off">
+          </label>
+          <label class="field">
+            <span class="field-label">Model Name</span>
+            <input id="model-name" type="text" value="gemini-2.5-flash" placeholder="gemini-2.5-flash">
+          </label>
+        </div>
+
+        <div class="setup-actions" style="margin-top: 18px;">
+          <button id="save-api" class="btn primary"><i class="fa-solid fa-floppy-disk"></i> 키 저장</button>
+          <button id="test-api" class="btn secondary"><i class="fa-solid fa-wifi"></i> 연결 테스트</button>
+          <button id="clear-api" class="btn ghost"><i class="fa-solid fa-trash-can"></i> 키 삭제</button>
+        </div>
+
+        <div id="api-note" class="analysis-note" style="margin-top: 16px;">
+          Gemini를 연결하면 기록 분석 결과에 모델 기반 설명과 질문이 들어갑니다.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="record" class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow badge-deep"><i class="fa-solid fa-pen-to-square"></i> 실제 동작 영역</span>
+        <h2 class="section-title">학습 불안을 기록하고 생각 패턴을 바로 분석합니다</h2>
+        <p class="section-copy">
+          폼 입력과 대화형 기록을 모두 지원하며, Gemini 실패 시에는 즉시 로컬 분석으로 이어집니다.
+        </p>
+      </div>
+
+      <div class="record-grid">
+        <div class="panel reveal">
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="form"><i class="fa-solid fa-list-check"></i> 폼으로 기록</button>
+            <button class="tab-btn" data-tab="chat"><i class="fa-solid fa-comments"></i> 대화로 기록</button>
+          </div>
+
+          <div id="form-panel">
+            <div class="wizard-top">
+              <div>
+                <strong id="step-label" style="display: block; margin-bottom: 4px; font-size: 15px;">1 / 4 · 상황 입력</strong>
+                <span class="small-muted">상황-생각-감정-행동 흐름을 순서대로 적습니다.</span>
+              </div>
+              <div id="step-dots" class="step-dots">
+                <span class="active"></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+            <div class="progress"><span id="progress-bar"></span></div>
+
+            <div id="step-0" class="step-panel active">
+              <h3>어떤 상황이 있었나요?</h3>
+              <p>언제, 어디서, 무슨 일이 있었는지 적어주세요.</p>
+              <textarea id="field-situation" placeholder="예: 모의고사에서 마지막 3문제를 틀리고 머리가 하얘졌다."></textarea>
+            </div>
+
+            <div id="step-1" class="step-panel">
+              <h3>그때 어떤 생각이 스쳐 지나갔나요?</h3>
+              <p>자동으로 떠오른 문장을 그대로 적어주세요.</p>
+              <textarea id="field-thought" placeholder="예: 이번에도 망했고 나는 수학을 못해."></textarea>
+            </div>
+
+            <div id="step-2" class="step-panel">
+              <h3>어떤 감정이 들었나요?</h3>
+              <p>대표 감정과 강도를 표시해주세요.</p>
+              <div id="emotion-grid" class="emotion-grid"></div>
+              <div class="range-head">
+                <span class="field-label">감정 강도</span>
+                <strong id="intensity-value" style="font-size: 18px;">5</strong>
+              </div>
+              <input id="field-intensity" type="range" min="1" max="10" value="5">
+              <div class="small-muted" style="display: flex; justify-content: space-between; margin-top: 8px;">
+                <span>1 · 약함</span>
+                <span>10 · 매우 강함</span>
+              </div>
+            </div>
+
+            <div id="step-3" class="step-panel">
+              <h3>그래서 어떻게 행동했나요?</h3>
+              <p>실제 행동이나 멈춘 행동을 적어주세요.</p>
+              <textarea id="field-behavior" placeholder="예: 복습 대신 책을 덮고 휴대폰만 봤다."></textarea>
+            </div>
+
+            <div id="record-status" class="status-line"></div>
+
+            <div class="wizard-actions" style="justify-content: space-between; margin-top: 18px;">
+              <button id="prev-step" class="btn ghost" style="display: none;"><i class="fa-solid fa-arrow-left"></i> 이전</button>
+              <span style="flex: 1;"></span>
+              <button id="next-step" class="btn primary">다음 <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+          </div>
+
+          <div id="chat-panel" class="chat-panel">
+            <div class="chat-shell">
+              <div class="chat-head">
+                <span class="chat-avatar"><i class="fa-solid fa-robot"></i></span>
+                <div>
+                  <strong style="display: block; margin-bottom: 4px;">CBT 기록 도우미</strong>
+                  <p class="small-muted">질문에 답하면 기록이 완성되고 마지막에 Gemini 분석을 수행합니다.</p>
+                </div>
+              </div>
+              <div id="chat-log" class="chat-log"></div>
+              <div class="chat-input-row">
+                <input id="chat-input" type="text" placeholder="메시지를 입력하세요">
+                <button id="chat-send" class="btn primary"><i class="fa-solid fa-paper-plane"></i> 전송</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-stack">
+          <article class="status-card reveal sync-card">
+            <strong>백업 · 동기화</strong>
+            <p class="small-muted">GitHub Pages에서도 브라우저마다 저장이 분리됩니다. 백업 파일을 내보내 다른 기기에서 불러오면 기록을 이어서 쓸 수 있습니다.</p>
+            <div id="backup-status" class="analysis-note" style="margin-top: 0;">저장된 기록 0건 · 백업 파일에는 API 키가 포함되지 않습니다.</div>
+            <div class="sync-actions">
+              <button id="export-records" class="btn secondary"><i class="fa-solid fa-file-export"></i> 기록 내보내기</button>
+              <button id="import-records" class="btn ghost"><i class="fa-solid fa-file-import"></i> 기록 불러오기</button>
+            </div>
+            <input id="backup-file" type="file" accept=".json,application/json" hidden>
+          </article>
+
+          <article class="status-card reveal flow-card">
+            <strong>기록 흐름</strong>
+            <div class="steps-list">
+              <div class="step-item">
+                <span class="step-index">1</span>
+                <div>
+                  <strong style="margin-bottom: 4px; font-size: 14px;">상황 기록</strong>
+                  <p class="small-muted">무슨 일이 있었는지 적습니다.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <span class="step-index">2</span>
+                <div>
+                  <strong style="margin-bottom: 4px; font-size: 14px;">자동 사고 포착</strong>
+                  <p class="small-muted">자동으로 떠오른 생각을 적습니다.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <span class="step-index">3</span>
+                <div>
+                  <strong style="margin-bottom: 4px; font-size: 14px;">감정과 강도 표시</strong>
+                  <p class="small-muted">감정과 강도를 숫자로 적습니다.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <span class="step-index">4</span>
+                <div>
+                  <strong style="margin-bottom: 4px; font-size: 14px;">행동 연결</strong>
+                  <p class="small-muted">나온 행동 반응을 확인합니다.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="status-card reveal sample-card">
+            <strong>예시 자동 채우기</strong>
+            <div class="sample-list" style="margin-top: 12px;">
+              <button class="sample-btn" data-sample="exam">
+                <div>
+                  <strong>모의고사 불안</strong>
+                  <p class="small-muted">시험 실패를 전체 능력으로 일반화</p>
+                </div>
+              </button>
+              <button class="sample-btn" data-sample="presentation">
+                <div>
+                  <strong>발표 전 긴장</strong>
+                  <p class="small-muted">타인 평가를 앞당겨 예측하는 사례</p>
+                </div>
+              </button>
+              <button class="sample-btn" data-sample="deadline">
+                <div>
+                  <strong>과제 마감 죄책감</strong>
+                  <p class="small-muted">해야식 사고와 개인화가 겹친 사례</p>
+                </div>
+              </button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="result-modal" class="modal" aria-hidden="true">
+    <div class="modal-shell">
+      <div class="modal-head">
+        <h3><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--green); margin-right: 8px;"></i>기록 분석 결과</h3>
+        <button id="close-modal" class="icon-btn" aria-label="분석 결과 닫기"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="result-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <section id="dashboard" class="section alt">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow badge-green"><i class="fa-solid fa-chart-line"></i> 데이터 시각화</span>
+        <h2 class="section-title">기록이 쌓이면 불안의 패턴이 보입니다</h2>
+        <p class="section-copy">
+          날짜별 감정 강도, 자주 나타난 왜곡 패턴, 요일·시간대별 불안 정도를 시각화해 스스로 인식하지 못했던 경향을 발견할 수 있습니다.
+        </p>
+      </div>
+
+      <div id="dashboard-empty" class="empty-card reveal">
+        <div class="empty-mark"><i class="fa-solid fa-chart-column"></i></div>
+        <h3 style="margin-bottom: 10px;">아직 저장된 기록이 없습니다</h3>
+        <p class="helper" style="max-width: 500px; margin: 0 auto 18px;">
+          기록을 시작하면 감정 변화 그래프와 왜곡 빈도 차트가 생성됩니다. 빠르게 확인하고 싶다면 데모 데이터를 불러와도 됩니다.
+        </p>
+        <div class="setup-actions" style="justify-content: center;">
+          <a href="#record" class="btn primary"><i class="fa-solid fa-pen"></i> 기록하러 가기</a>
+          <button id="load-demo" class="btn secondary"><i class="fa-solid fa-flask"></i> 데모 데이터 불러오기</button>
+        </div>
+      </div>
+
+      <div id="dashboard-shell" class="dashboard-shell" style="display: none;">
+        <div class="chart-grid">
+          <article class="chart-card reveal">
+            <h3>감정 강도 변화</h3>
+            <p class="chart-note">최근 기록 순서대로 감정 강도의 변화 흐름을 확인합니다.</p>
+            <div class="chart-wrap"><canvas id="line-chart"></canvas></div>
+          </article>
+
+          <article class="chart-card reveal">
+            <h3>주요 인지 왜곡 빈도</h3>
+            <p class="chart-note">각 기록의 1순위 패턴을 기준으로 가장 자주 등장한 왜곡을 집계합니다.</p>
+            <div class="chart-wrap"><canvas id="donut-chart"></canvas></div>
+          </article>
+        </div>
+
+        <article class="chart-card reveal" style="margin-bottom: 18px;">
+          <h3>요일 · 시간대별 히트맵</h3>
+          <p class="chart-note">요일과 시간대에 따라 평균 감정 강도가 어떻게 달라지는지 살펴봅니다.</p>
+          <div id="heatmap" class="heatmap-wrap"></div>
+        </article>
+
+        <article class="panel reveal">
+          <div class="report-toolbar">
+            <div>
+              <h3 style="margin-bottom: 6px;">기록 목록</h3>
+              <p class="small-muted">최근 기록 20건을 다시 열어 분석 결과를 확인할 수 있습니다.</p>
+            </div>
+            <button id="clear-records" class="btn ghost"><i class="fa-solid fa-trash-can"></i> 전체 삭제</button>
+          </div>
+          <div id="record-list" class="record-list"></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="report" class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow badge-amber"><i class="fa-solid fa-file-waveform"></i> Weekly Report</span>
+        <h2 class="section-title">이번 주 기록을 요약하고 다음 주 연습을 제안합니다</h2>
+        <p class="section-copy">
+          기본 리포트는 로컬 집계로 바로 생성되고, 버튼을 누르면 Gemini가 같은 데이터를 다시 요약합니다.
+        </p>
+      </div>
+
+      <div class="report-toolbar reveal">
+        <div id="report-mode-status" class="status-pill status-warn">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>로컬 요약 리포트 표시 중</span>
+        </div>
+        <div class="report-actions">
+          <button id="show-local-report" class="btn secondary"><i class="fa-solid fa-table"></i> 로컬 리포트</button>
+          <button id="generate-ai-report" class="btn primary"><i class="fa-solid fa-robot"></i> Gemini 리포트 생성</button>
+        </div>
+      </div>
+
+      <div id="report-box" class="reveal"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div>
+      <strong>마음CBT 랩</strong>
+      <span>인지행동치료(CBT) 기반 학습 불안 완화 및 메타인지 강화 AI 시스템</span>
+    </div>
+    <p>본 도구는 자기점검 및 프로젝트 시연용이며, 전문 상담과 치료를 대체하지 않습니다.</p>
+  </div>
+</footer>
+
+<script>
+  var STORE_KEY = "cbt_mind_records";
+  var SETTINGS_KEY = "cbt_mind_gemini_settings";
+  var REPORT_CACHE_KEY = "cbt_mind_weekly_report_cache";
+  var BACKUP_VERSION = 1;
+  var DEFAULT_MODEL = "gemini-2.5-flash";
+  var NONE_DISTORTION = "특정 왜곡 미발견";
+
+  var EMOTIONS = ["불안", "우울", "분노", "수치심", "죄책감", "짜증", "무기력", "혼란", "초조", "답답함"];
+
+  var DIST = {
+    "흑백논리": {
+      icon: "fa-circle-half-stroke",
+      color: "#2f6f58",
+      kw: ["전부", "아무것도", "완벽", "망했다", "0점", "무조건", "절대", "전혀", "다 틀렸", "하나도", "완전히"],
+      desc: "중간 단계를 인정하지 않고 완벽하거나 완전히 실패한 것으로만 평가하는 패턴입니다.",
+      cardDesc: "성공과 실패만 보는 극단 해석",
+      q: ["0점과 100점 사이의 중간 평가는 없을까요?", "부분적으로 해낸 부분은 없었나요?", "완벽하지 않다고 해서 완전히 실패한 것일까요?"],
+      alt: ["완벽하지 않아도 일부는 충분히 해낼 수 있다.", "한 번의 결과가 내 전체 능력을 증명하지는 않는다.", "성공과 실패 사이에는 다양한 단계가 있다."]
+    },
+    "파국화": {
+      icon: "fa-volcano",
+      color: "#c7854b",
+      kw: ["끝장", "죽겠다", "망할", "대재앙", "치명적", "최악", "절망", "파탄", "끝이다"],
+      desc: "부정적 사건이 곧 큰 재앙으로 이어질 것처럼 확대 해석하는 패턴입니다.",
+      cardDesc: "작은 실패를 재앙처럼 확대",
+      q: ["실제로 최악이 될 확률은 얼마나 될까요?", "비슷한 일이 있었을 때 정말 재앙이 되었나요?", "결과가 나빠도 내가 감당할 방법은 없을까요?"],
+      alt: ["불편한 일일 수 있지만 재앙이라고 단정할 필요는 없다.", "최악의 가능성보다 현실적인 가능성을 먼저 볼 수 있다.", "결과가 기대보다 나빠도 완전히 무너지지는 않는다."]
+    },
+    "과잉일반화": {
+      icon: "fa-arrows-left-right-to-line",
+      color: "#5a7c9c",
+      kw: ["항상", "늘", "매번", "언제나", "결국", "역시", "번번이", "계속", "한 번도"],
+      desc: "한 번의 사건이나 일부 경험을 근거로 전체를 일반화하는 패턴입니다.",
+      cardDesc: "한 번의 결과를 전체로 일반화",
+      q: ["정말 항상 그랬나요, 예외는 없었나요?", "과거에 잘 해낸 경험은 없었나요?", "이번 일이 앞으로의 모든 결과를 대표하나요?"],
+      alt: ["이번에는 어려웠지만 항상 그런 것은 아니다.", "과거에 잘한 순간도 있었으니 전체를 일반화할 필요는 없다.", "한 번의 결과가 다음 결과를 모두 결정하지 않는다."]
+    },
+    "마음읽기": {
+      icon: "fa-eye",
+      color: "#8b6db2",
+      kw: ["나보고", "내가 싫어", "웃음거리", "비웃", "판단할", "평가할", "사람들이", "속으로"],
+      desc: "타인이 자신을 부정적으로 보고 있다고 확신하는 패턴입니다.",
+      cardDesc: "타인의 생각을 단정해 해석",
+      q: ["상대의 생각을 확인한 적이 있나요?", "다른 해석 가능성은 없을까요?", "상대가 정말 그렇게 생각한다고 단정할 근거가 있나요?"],
+      alt: ["상대의 생각을 나는 완전히 알 수 없다.", "타인은 내가 생각하는 것만큼 나를 오래 보지 않을 수 있다.", "부정적으로 보였더라도 그 이유가 꼭 나 때문은 아닐 수 있다."]
+    },
+    "감정적 추론": {
+      icon: "fa-heart-crack",
+      color: "#c45b6a",
+      kw: ["느끼기 때문에", "느끼니까", "직감", "느낌이", "분명", "틀림없어"],
+      desc: "느낌을 사실의 증거처럼 받아들이는 패턴입니다.",
+      cardDesc: "느낌을 사실처럼 믿는 해석",
+      q: ["감정과 사실은 항상 같을까요?", "불안하다는 느낌이 곧 실패를 의미하나요?", "감정과 다른 객관적 근거는 없나요?"],
+      alt: ["불안하다고 해서 실제로 위험한 것은 아니다.", "감정은 중요한 정보지만 사실 그 자체는 아니다.", "기분과 현실을 분리해서 볼 수 있다."]
+    },
+    "해야식 사고": {
+      icon: "fa-gavel",
+      color: "#b5922d",
+      kw: ["해야", "해야만", "반드시", "의무", "당연히", "꼭", "기필코", "안 하면 안 돼"],
+      desc: "자신이나 타인에게 매우 엄격한 규칙을 적용하는 패턴입니다.",
+      cardDesc: "\"반드시 해야 해\" 식 압박",
+      q: ["그 규칙은 꼭 절대적이어야 하나요?", "못 지키면 어떤 의미가 생긴다고 믿고 있나요?", "해야 한다를 하면 좋다로 바꿔볼 수 있나요?"],
+      alt: ["하고 싶지만 못했다고 해서 내 가치가 사라지지는 않는다.", "원하는 목표와 절대 규칙은 다를 수 있다.", "조금 덜 해내도 충분히 의미가 있다."]
+    },
+    "개인화": {
+      icon: "fa-hand-point-back",
+      color: "#4d8b7f",
+      kw: ["내 탓", "내 잘못", "내가 때문에", "내가 못 해서", "나만", "내 책임"],
+      desc: "여러 요인이 있는 상황에서도 지나치게 자신의 책임으로 돌리는 패턴입니다.",
+      cardDesc: "여러 원인을 전부 내 탓으로 돌림",
+      q: ["다른 요인도 있었나요?", "내가 통제할 수 없는 부분은 없었나요?", "친구가 같은 상황이면 그 친구에게도 전부 네 탓이라고 말할까요?"],
+      alt: ["그 결과에는 여러 요인이 함께 작용했다.", "내 책임이 일부 있을 수는 있어도 전부는 아니다.", "자책보다 다음 행동을 바꾸는 것이 더 도움이 된다."]
+    }
+  };
+
+  var DIST_NAMES = Object.keys(DIST);
+  var DIST_WITH_NONE = DIST_NAMES.concat([NONE_DISTORTION]);
+
+  var SAMPLE_RECORDS = {
+    exam: {
+      situation: "수학 모의고사를 봤는데 마지막 3문제를 다 틀렸고, 채점하면서 숨이 막히는 느낌이 들었다.",
+      thought: "나는 원래 수학을 못하는 사람이야. 이번에도 망했고 수능도 끝장일 거야.",
+      emotion: "불안",
+      intensity: 9,
+      behavior: "복습을 해야 하는데 책을 덮고 계속 점수만 다시 계산했다."
+    },
+    presentation: {
+      situation: "다음 주 과학 발표 순서를 뽑았는데 내 이름이 첫 번째였다.",
+      thought: "발표하다가 말을 더듬으면 다들 내가 준비도 안 한 사람이라고 생각할 거야.",
+      emotion: "초조",
+      intensity: 8,
+      behavior: "발표 자료를 열어보지 못하고 다른 과목 숙제만 했다."
+    },
+    deadline: {
+      situation: "영어 과제를 하루 늦게 제출했고 선생님이 마감 시간을 다시 강조하셨다.",
+      thought: "나는 왜 항상 이 모양이지. 제시간에 못 냈으니 전부 내 잘못이고 반드시 만회해야 해.",
+      emotion: "죄책감",
+      intensity: 7,
+      behavior: "다음 과제까지 한꺼번에 완벽하게 하려고 하다가 오히려 시작을 못 했다."
+    }
+  };
+
+  var CHAT_STEPS = [
+    {
+      field: "situation",
+      prompt: "안녕하세요. 오늘 어떤 상황에서 학습 불안이나 스트레스를 느꼈는지 말해 주세요.\n\n예: 수학 모의고사를 봤는데 마지막 3문제를 틀렸어."
+    },
+    {
+      field: "thought",
+      prompt: "그 상황에서 자동으로 떠오른 생각은 무엇이었나요?\n머릿속 문장을 그대로 적는 것이 좋습니다."
+    },
+    {
+      field: "emotion",
+      prompt: "그때 어떤 감정이 들었고 강도는 몇 점이었나요?\n예: 불안 7점"
+    },
+    {
+      field: "behavior",
+      prompt: "그 감정 때문에 어떻게 행동했나요? 또는 무엇을 하지 못했나요?"
+    }
+  ];
+
+  var ANALYSIS_SCHEMA = {
+    type: "object",
+    properties: {
+      summary: { type: "string" },
+      distortions: {
+        type: "array",
+        minItems: 1,
+        maxItems: 3,
+        items: {
+          type: "object",
+          properties: {
+            name: { type: "string", enum: DIST_WITH_NONE },
+            confidence: { type: "integer", minimum: 0, maximum: 100 },
+            reason: { type: "string" },
+            evidence: { type: "string" }
+          },
+          required: ["name", "confidence", "reason", "evidence"]
+        }
+      },
+      reflectionQuestions: {
+        type: "array",
+        minItems: 2,
+        maxItems: 3,
+        items: { type: "string" }
+      },
+      alternativeThoughts: {
+        type: "array",
+        minItems: 2,
+        maxItems: 3,
+        items: { type: "string" }
+      },
+      metacognitionInsight: { type: "string" },
+      nextAction: { type: "string" },
+      cautionNote: { type: "string" }
+    },
+    required: ["summary", "distortions", "reflectionQuestions", "alternativeThoughts", "metacognitionInsight", "nextAction", "cautionNote"]
+  };
+
+  var REPORT_SCHEMA = {
+    type: "object",
+    properties: {
+      summary: { type: "string" },
+      patternHighlights: {
+        type: "array",
+        minItems: 2,
+        maxItems: 4,
+        items: { type: "string" }
+      },
+      emotionalTrend: { type: "string" },
+      recommendedExercises: {
+        type: "array",
+        minItems: 2,
+        maxItems: 4,
+        items: { type: "string" }
+      },
+      nextWeekFocus: { type: "string" },
+      warningSignal: { type: "string" }
+    },
+    required: ["summary", "patternHighlights", "emotionalTrend", "recommendedExercises", "nextWeekFocus", "warningSignal"]
+  };
+
+  var records = [];
+  var settings = {
+    apiKey: "",
+    model: DEFAULT_MODEL,
+    verifiedAt: ""
+  };
+  var formStep = 0;
+  var selectedEmotion = null;
+  var chatStep = 0;
+  var chatData = {};
+  var isFormBusy = false;
+  var isChatBusy = false;
+  var weeklyReportCache = null;
+  var currentReportMode = "local";
+  var lineChart = null;
+  var donutChart = null;
+
+  function $(id) {
+    return document.getElementById(id);
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? "" : value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function clamp(num, min, max) {
+    return Math.min(max, Math.max(min, num));
+  }
+
+  function formatDateShort(value) {
+    var date = new Date(value);
+    return (date.getMonth() + 1) + "/" + date.getDate();
+  }
+
+  function formatDateTime(value) {
+    var date = new Date(value);
+    var hour = date.getHours();
+    var period = hour < 6 ? "밤" : hour < 12 ? "오전" : hour < 18 ? "오후" : "저녁";
+    return date.getMonth() + 1 + "월 " + date.getDate() + "일 " + period;
+  }
+
+  function formatStamp(value) {
+    var date = new Date(value);
+    var year = date.getFullYear();
+    var month = String(date.getMonth() + 1).padStart(2, "0");
+    var day = String(date.getDate()).padStart(2, "0");
+    var hour = String(date.getHours()).padStart(2, "0");
+    var minute = String(date.getMinutes()).padStart(2, "0");
+    return year + month + day + "-" + hour + minute;
+  }
+
+  function dedupeStrings(items, max) {
+    var seen = {};
+    var out = [];
+    for (var i = 0; i < items.length; i++) {
+      var value = String(items[i] || "").trim();
+      if (!value || seen[value]) continue;
+      seen[value] = true;
+      out.push(value);
+      if (max && out.length >= max) break;
+    }
+    return out;
+  }
+
+  function toast(message, type) {
+    var box = $("toast-box");
+    var el = document.createElement("div");
+    el.className = "toast " + (type || "success");
+    el.textContent = message;
+    box.appendChild(el);
+    setTimeout(function() {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(-10px)";
+      setTimeout(function() {
+        if (el.parentNode) el.parentNode.removeChild(el);
+      }, 260);
+    }, 2600);
+  }
+
+  function saveRecords() {
+    localStorage.setItem(STORE_KEY, JSON.stringify(records));
+  }
+
+  function saveSettings() {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  }
+
+  function saveReportCache() {
+    localStorage.setItem(REPORT_CACHE_KEY, JSON.stringify(weeklyReportCache));
+  }
+
+  function loadStorage() {
+    try {
+      var rawRecords = JSON.parse(localStorage.getItem(STORE_KEY) || "[]");
+      if (!Array.isArray(rawRecords)) rawRecords = [];
+      records = rawRecords.map(normalizeRecord).filter(Boolean);
+      saveRecords();
+    } catch (error) {
+      records = [];
+    }
+
+    try {
+      var rawSettings = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
+      settings.apiKey = String(rawSettings.apiKey || "");
+      settings.model = String(rawSettings.model || DEFAULT_MODEL);
+      settings.verifiedAt = String(rawSettings.verifiedAt || "");
+    } catch (error) {
+      settings = { apiKey: "", model: DEFAULT_MODEL, verifiedAt: "" };
+    }
+
+    try {
+      weeklyReportCache = JSON.parse(localStorage.getItem(REPORT_CACHE_KEY) || "null");
+    } catch (error) {
+      weeklyReportCache = null;
+    }
+  }
+
+  function buildBackupPayload() {
+    return {
+      app: "cbt-mind-lab",
+      version: BACKUP_VERSION,
+      exportedAt: new Date().toISOString(),
+      records: records,
+      settings: {
+        model: getModelName()
+      }
+    };
+  }
+
+  function updateBackupStatus(extraText) {
+    var el = $("backup-status");
+    if (!el) return;
+
+    var base = "저장된 기록 " + records.length + "건";
+    var safe = "백업 파일에는 API 키가 포함되지 않습니다.";
+    el.textContent = extraText ? extraText + " · " + base + " · " + safe : base + " · " + safe;
+  }
+
+  function downloadJsonFile(filename, payload) {
+    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(function() {
+      URL.revokeObjectURL(url);
+    }, 0);
+  }
+
+  function exportRecordsBackup() {
+    var payload = buildBackupPayload();
+    var filename = "cbt-mind-backup-" + formatStamp(payload.exportedAt) + ".json";
+    downloadJsonFile(filename, payload);
+    updateBackupStatus("백업 파일을 내보냈습니다");
+    toast("기록 백업 파일을 내보냈습니다.", "success");
+  }
+
+  function importBackupPayload(payload) {
+    var rawRecords = null;
+
+    if (Array.isArray(payload)) {
+      rawRecords = payload;
+    } else if (payload && Array.isArray(payload.records)) {
+      rawRecords = payload.records;
+    }
+
+    if (!rawRecords) {
+      throw new Error("지원하지 않는 백업 형식입니다.");
+    }
+
+    var imported = rawRecords.map(normalizeRecord).filter(Boolean);
+    if (!imported.length && rawRecords.length) {
+      throw new Error("백업 파일에서 불러올 기록을 찾지 못했습니다.");
+    }
+
+    var mergedMap = {};
+    var i;
+
+    for (i = 0; i < records.length; i++) {
+      mergedMap[String(records[i].id)] = records[i];
+    }
+    for (i = 0; i < imported.length; i++) {
+      mergedMap[String(imported[i].id)] = imported[i];
+    }
+
+    records = Object.keys(mergedMap).map(function(key) {
+      return mergedMap[key];
+    }).sort(function(a, b) {
+      return new Date(b.date) - new Date(a.date);
+    });
+
+    if (payload && payload.settings && payload.settings.model) {
+      settings.model = String(payload.settings.model || DEFAULT_MODEL);
+      $("model-name").value = settings.model;
+      saveSettings();
+    }
+
+    saveRecords();
+    invalidateWeeklyCache();
+    refreshDashboard();
+    renderReport("local");
+    updateBackupStatus("백업 파일을 불러왔습니다");
+    toast("백업 파일을 불러와 로컬 저장소에 반영했습니다.", "success");
+  }
+
+  function getDistMeta(name) {
+    if (DIST[name]) return DIST[name];
+    return {
+      icon: "fa-magnifying-glass",
+      color: "#6f766f",
+      desc: "입력된 생각에서 뚜렷한 특정 왜곡이 강하게 드러나지 않았습니다."
+    };
+  }
+
+  function normalizeDistortionItem(item) {
+    var name = DIST[item && item.name] || item && item.name === NONE_DISTORTION ? item.name : NONE_DISTORTION;
+    var meta = getDistMeta(name);
+    return {
+      name: name,
+      confidence: clamp(parseInt(item && item.confidence, 10) || 40, 0, 100),
+      reason: String(item && item.reason || meta.desc),
+      evidence: String(item && item.evidence || ""),
+      icon: meta.icon,
+      color: meta.color,
+      desc: meta.desc
+    };
+  }
+
+  function normalizeAnalysisObject(raw, record) {
+    var fallback = getRuleBasedAnalysis(record, "");
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return fallback;
+
+    var distortions = Array.isArray(raw.distortions) ? raw.distortions.map(normalizeDistortionItem) : fallback.distortions;
+    if (!distortions.length) distortions = fallback.distortions;
+
+    var questions = dedupeStrings(Array.isArray(raw.reflectionQuestions) ? raw.reflectionQuestions : fallback.reflectionQuestions, 3);
+    var alternatives = dedupeStrings(Array.isArray(raw.alternativeThoughts) ? raw.alternativeThoughts : fallback.alternativeThoughts, 3);
+
+    return {
+      summary: String(raw.summary || fallback.summary),
+      distortions: distortions.slice(0, 3),
+      reflectionQuestions: questions.length ? questions : fallback.reflectionQuestions,
+      alternativeThoughts: alternatives.length ? alternatives : fallback.alternativeThoughts,
+      metacognitionInsight: String(raw.metacognitionInsight || fallback.metacognitionInsight),
+      nextAction: String(raw.nextAction || fallback.nextAction),
+      cautionNote: String(raw.cautionNote || fallback.cautionNote),
+      source: String(raw.source || "fallback"),
+      model: String(raw.model || fallback.model),
+      fallbackReason: String(raw.fallbackReason || "")
+    };
+  }
+
+  function normalizeLegacyAnalysis(raw) {
+    if (!Array.isArray(raw) || !raw.length) return null;
+
+    var distortions = raw.map(function(item) {
+      return normalizeDistortionItem({
+        name: item.name,
+        confidence: 60,
+        reason: item.desc,
+        evidence: Array.isArray(item.q) && item.q.length ? item.q[0] : ""
+      });
+    }).slice(0, 3);
+
+    var first = raw[0] || {};
+    var qs = [];
+    var alts = [];
+    for (var i = 0; i < raw.length; i++) {
+      if (Array.isArray(raw[i].q)) qs = qs.concat(raw[i].q);
+      if (Array.isArray(raw[i].alt)) alts = alts.concat(raw[i].alt);
+    }
+
+    return {
+      summary: first.desc || "기존 규칙 기반 분석 결과입니다.",
+      distortions: distortions.length ? distortions : [normalizeDistortionItem({ name: NONE_DISTORTION, confidence: 40, reason: "기존 데이터", evidence: "" })],
+      reflectionQuestions: dedupeStrings(qs, 3),
+      alternativeThoughts: dedupeStrings(alts, 3),
+      metacognitionInsight: "이 기록은 이전 버전에서 저장된 데이터입니다. 현재 버전에서는 생각-감정-행동 연결 구조를 유지한 채 다시 분석할 수 있습니다.",
+      nextAction: "같은 상황이 오면 생각을 문장으로 다시 적고, 근거가 있는지 차분하게 확인해보세요.",
+      cautionNote: "이 결과는 자기점검용이며 전문 상담을 대체하지 않습니다.",
+      source: "legacy-local",
+      model: "rule-engine-legacy",
+      fallbackReason: ""
+    };
+  }
+
+  function normalizeRecord(raw) {
+    if (!raw || typeof raw !== "object") return null;
+
+    var record = {
+      id: raw.id || Date.now() + Math.floor(Math.random() * 1000),
+      date: raw.date || new Date().toISOString(),
+      situation: String(raw.situation || raw.sit || "").trim(),
+      thought: String(raw.thought || raw.tho || "").trim(),
+      emotion: String(raw.emotion || raw.emo || "혼란").trim(),
+      intensity: clamp(parseInt(raw.intensity || raw.int || 5, 10) || 5, 1, 10),
+      behavior: String(raw.behavior || raw.beh || "").trim(),
+      analysis: null
+    };
+
+    if (Array.isArray(raw.analysis)) {
+      record.analysis = normalizeLegacyAnalysis(raw.analysis) || getRuleBasedAnalysis(record, "");
+    } else {
+      record.analysis = normalizeAnalysisObject(raw.analysis, record);
+    }
+
+    return record;
+  }
+
+  function rankDistortions(thought) {
+    var text = String(thought || "");
+    var ranked = [];
+
+    for (var i = 0; i < DIST_NAMES.length; i++) {
+      var name = DIST_NAMES[i];
+      var meta = DIST[name];
+      var matched = [];
+      for (var j = 0; j < meta.kw.length; j++) {
+        if (text.indexOf(meta.kw[j]) !== -1) matched.push(meta.kw[j]);
+      }
+      if (!matched.length) continue;
+      ranked.push({
+        name: name,
+        confidence: clamp(52 + matched.length * 12, 40, 96),
+        reason: meta.desc,
+        evidence: "감지된 표현: " + matched.slice(0, 3).join(", ")
+      });
+    }
+
+    ranked.sort(function(a, b) {
+      return b.confidence - a.confidence;
+    });
+
+    if (!ranked.length) {
+      ranked.push({
+        name: NONE_DISTORTION,
+        confidence: 36,
+        reason: "입력한 생각에서 특정 왜곡 키워드가 강하게 드러나지 않았습니다. 더 구체적인 문장으로 적으면 패턴이 보일 수 있습니다.",
+        evidence: "명시적 왜곡 키워드가 적거나 중립적 서술이 많습니다."
+      });
+    }
+
+    return ranked.slice(0, 3).map(normalizeDistortionItem);
+  }
+
+  function getRuleBasedAnalysis(record, fallbackReason) {
+    var distortions = rankDistortions(record.thought);
+    var primary = distortions[0];
+    var primaryMeta = getDistMeta(primary.name);
+    var questions = [];
+    var alternatives = [];
+
+    for (var i = 0; i < distortions.length; i++) {
+      var meta = getDistMeta(distortions[i].name);
+      if (DIST[distortions[i].name]) {
+        questions = questions.concat(DIST[distortions[i].name].q);
+        alternatives = alternatives.concat(DIST[distortions[i].name].alt);
+      } else {
+        questions.push("이 생각이 사실이라는 근거와 반대 근거를 각각 적어볼 수 있을까요?");
+        alternatives.push("지금은 불안하지만, 한 번의 결과가 모든 가능성을 결정하지는 않는다.");
+      }
+    }
+
+    questions = dedupeStrings(questions, 3);
+    alternatives = dedupeStrings(alternatives, 3);
+
+    return {
+      summary: primary.name === NONE_DISTORTION
+        ? "현재 문장에서는 특정 왜곡 하나가 강하게 보이지 않지만, 생각을 더 구체적으로 적으면 패턴을 더 선명하게 볼 수 있습니다."
+        : "입력한 생각에서는 \"" + primary.name + "\" 패턴이 가장 먼저 보입니다. 사건 자체보다 해석이 감정 강도와 행동 회피를 더 크게 키운 것으로 보입니다.",
+      distortions: distortions,
+      reflectionQuestions: questions.length ? questions : ["이 생각이 사실인지 확인할 수 있는 근거는 무엇인가요?", "다른 해석 가능성은 없을까요?"],
+      alternativeThoughts: alternatives.length ? alternatives : ["지금 느끼는 불안이 곧 결과를 확정하는 것은 아니다.", "한 번의 결과가 내 전체 능력을 설명하지는 않는다."],
+      metacognitionInsight: "상황 → 생각 → 감정 → 행동이 연결되어 있습니다. 특히 \"" + (record.thought || "자동 사고") + "\" 같은 문장이 감정 강도를 높이고 \"" + (record.behavior || "행동") + "\" 같은 반응으로 이어졌는지 관찰해보세요.",
+      nextAction: "오늘은 자동 사고 문장을 한 줄 적은 뒤, 그 옆에 사실 근거 1개와 반대 근거 1개를 함께 써보세요.",
+      cautionNote: "이 결과는 자기점검용이며 전문 상담이나 치료를 대체하지 않습니다.",
+      source: "fallback",
+      model: "rule-engine-v2",
+      fallbackReason: String(fallbackReason || "")
+    };
+  }
+
+  function hasApiKey() {
+    return String(settings.apiKey || "").trim().length > 0;
+  }
+
+  function getModelName() {
+    return String(settings.model || DEFAULT_MODEL).trim() || DEFAULT_MODEL;
+  }
+
+  function extractGeminiText(payload) {
+    if (!payload || !payload.candidates || !payload.candidates.length) return "";
+    var parts = payload.candidates[0] && payload.candidates[0].content && payload.candidates[0].content.parts;
+    if (!Array.isArray(parts)) return "";
+    var text = "";
+    for (var i = 0; i < parts.length; i++) {
+      if (parts[i] && typeof parts[i].text === "string") text += parts[i].text;
+    }
+    return text.trim();
+  }
+
+  async function callGeminiJson(options) {
+    if (!hasApiKey()) throw new Error("Gemini API 키가 없습니다.");
+
+    var response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(getModelName()) + ":generateContent", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-goog-api-key": settings.apiKey.trim()
+      },
+      body: JSON.stringify({
+        system_instruction: {
+          parts: [{ text: options.systemInstruction }]
+        },
+        contents: [{
+          role: "user",
+          parts: [{ text: options.prompt }]
+        }],
+        generationConfig: {
+          temperature: typeof options.temperature === "number" ? options.temperature : 0.35,
+          responseMimeType: "application/json",
+          responseJsonSchema: options.schema
+        }
+      })
+    });
+
+    var payload = {};
+    try {
+      payload = await response.json();
+    } catch (error) {
+      payload = {};
+    }
+
+    if (!response.ok) {
+      var message = payload && payload.error && payload.error.message ? payload.error.message : "Gemini API 호출에 실패했습니다.";
+      throw new Error(message);
+    }
+
+    var text = extractGeminiText(payload);
+    if (!text) throw new Error("Gemini 응답이 비어 있습니다.");
+
+    try {
+      return JSON.parse(text);
+    } catch (error) {
+      throw new Error("Gemini 응답 JSON 파싱에 실패했습니다.");
+    }
+  }
+
+  function buildAnalysisPrompt(record) {
+    return [
+      "다음 학생 기록을 CBT 관점에서 분석하세요.",
+      "반드시 아래 인지 왜곡 목록에서만 선택하세요: " + DIST_WITH_NONE.join(", "),
+      "학습 불안 상황에 맞는 쉬운 한국어로 설명하세요.",
+      "전문 진단처럼 단정하지 말고, 자기점검용 피드백으로 작성하세요.",
+      "상황: " + record.situation,
+      "생각: " + record.thought,
+      "감정: " + record.emotion + " / 강도 " + record.intensity + "점",
+      "행동: " + record.behavior,
+      "출력 규칙:",
+      "- distortions는 가능성이 높은 순서로 1~3개",
+      "- confidence는 0~100 정수",
+      "- evidence는 원문에 기반한 짧은 근거",
+      "- reflectionQuestions는 스스로 다시 생각해볼 질문 2~3개",
+      "- alternativeThoughts는 균형 잡힌 대안 사고 2~3개",
+      "- nextAction은 오늘 바로 할 수 있는 1단계 행동",
+      "- cautionNote는 한 문장",
+      "JSON만 반환하세요."
+    ].join("\n");
+  }
+
+  function buildAnalysisSystemInstruction() {
+    return [
+      "너는 한국어 CBT 기록 보조 시스템이다.",
+      "사용자의 생각을 안전하고 교육적인 톤으로 요약하되, 의학적 진단이나 확정적 판정은 하지 않는다.",
+      "학습 불안 맥락에 집중하고, 감정-생각-행동 연결을 이해하도록 돕는다."
+    ].join(" ");
+  }
+
+  async function analyzeRecord(record) {
+    var fallback = getRuleBasedAnalysis(record, "");
+    if (!hasApiKey()) {
+      fallback.fallbackReason = "Gemini API 키가 저장되지 않아 로컬 규칙 분석을 사용했습니다.";
+      return fallback;
+    }
+
+    try {
+      var raw = await callGeminiJson({
+        systemInstruction: buildAnalysisSystemInstruction(),
+        prompt: buildAnalysisPrompt(record),
+        schema: ANALYSIS_SCHEMA,
+        temperature: 0.25
+      });
+
+      var normalized = normalizeAnalysisObject({
+        summary: raw.summary,
+        distortions: raw.distortions,
+        reflectionQuestions: raw.reflectionQuestions,
+        alternativeThoughts: raw.alternativeThoughts,
+        metacognitionInsight: raw.metacognitionInsight,
+        nextAction: raw.nextAction,
+        cautionNote: raw.cautionNote,
+        source: "gemini",
+        model: getModelName()
+      }, record);
+
+      normalized.source = "gemini";
+      normalized.model = getModelName();
+      return normalized;
+    } catch (error) {
+      fallback.fallbackReason = error.message;
+      return fallback;
+    }
+  }
+
+  function buildWeeklyStats() {
+    var now = new Date();
+    var weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    var weekRecords = records.filter(function(record) {
+      return new Date(record.date) >= weekAgo;
+    });
+
+    weekRecords.sort(function(a, b) {
+      return new Date(a.date) - new Date(b.date);
+    });
+
+    var intensitySum = 0;
+    var emotionCounts = {};
+    var distortionCounts = {};
+    for (var i = 0; i < weekRecords.length; i++) {
+      intensitySum += weekRecords[i].intensity;
+      emotionCounts[weekRecords[i].emotion] = (emotionCounts[weekRecords[i].emotion] || 0) + 1;
+      var primaryName = weekRecords[i].analysis && weekRecords[i].analysis.distortions && weekRecords[i].analysis.distortions[0] ? weekRecords[i].analysis.distortions[0].name : NONE_DISTORTION;
+      if (primaryName !== NONE_DISTORTION) {
+        distortionCounts[primaryName] = (distortionCounts[primaryName] || 0) + 1;
+      }
+    }
+
+    var topEmotion = topEntry(emotionCounts) || [weekRecords[0] ? weekRecords[0].emotion : "없음", 0];
+    var topDistortion = topEntry(distortionCounts) || [NONE_DISTORTION, 0];
+    var avgIntensity = weekRecords.length ? (intensitySum / weekRecords.length) : 0;
+
+    var half = Math.floor(weekRecords.length / 2);
+    var firstHalf = weekRecords.slice(0, half || weekRecords.length);
+    var secondHalf = weekRecords.slice(half || 0);
+    var firstAvg = averageIntensity(firstHalf);
+    var secondAvg = averageIntensity(secondHalf);
+    var diff = secondAvg - firstAvg;
+    var trendLabel = diff > 0.6 ? "증가 추세" : diff < -0.6 ? "감소 추세" : "안정적";
+
+    return {
+      from: weekAgo,
+      to: now,
+      records: weekRecords,
+      total: weekRecords.length,
+      avgIntensity: avgIntensity,
+      topEmotion: { name: topEmotion[0], count: topEmotion[1] || 0 },
+      topDistortion: { name: topDistortion[0], count: topDistortion[1] || 0 },
+      trend: { diff: diff, label: trendLabel },
+      signature: weekRecords.map(function(item) { return item.id; }).join("|"),
+      recentSamples: weekRecords.slice(-8).map(function(item) {
+        return {
+          date: formatDateTime(item.date),
+          situation: item.situation,
+          thought: item.thought,
+          emotion: item.emotion,
+          intensity: item.intensity,
+          behavior: item.behavior,
+          primaryDistortion: item.analysis && item.analysis.distortions && item.analysis.distortions[0] ? item.analysis.distortions[0].name : NONE_DISTORTION
+        };
+      })
+    };
+  }
+
+  function averageIntensity(list) {
+    if (!list.length) return 0;
+    var sum = 0;
+    for (var i = 0; i < list.length; i++) sum += list[i].intensity;
+    return sum / list.length;
+  }
+
+  function topEntry(objectMap) {
+    var entries = [];
+    for (var key in objectMap) {
+      entries.push([key, objectMap[key]]);
+    }
+    entries.sort(function(a, b) {
+      return b[1] - a[1];
+    });
+    return entries[0] || null;
+  }
+
+  function buildLocalWeeklyReport(stats, reason) {
+    if (!stats.total) {
+      return {
+        summary: "최근 7일 내 기록이 없어 주간 리포트를 만들 수 없습니다. 먼저 1건 이상 기록을 저장해보세요.",
+        patternHighlights: ["기록이 있어야 감정 변화와 왜곡 패턴을 확인할 수 있습니다.", "폼 입력 또는 대화형 입력 중 편한 방식으로 시작하면 됩니다."],
+        emotionalTrend: "데이터 없음",
+        recommendedExercises: ["오늘 있었던 학습 스트레스 상황 한 가지를 떠올려 기록하기", "자동 사고를 한 문장으로 적고 감정 강도를 1~10점으로 표시하기"],
+        nextWeekFocus: "이번 주는 기록 습관 만들기에 집중하세요.",
+        warningSignal: "강한 불안이나 우울이 반복된다면 주변 도움을 일찍 요청하는 것이 좋습니다.",
+        source: "fallback",
+        model: "local-report-v1",
+        fallbackReason: reason || ""
+      };
+    }
+
+    var topDistMeta = DIST[stats.topDistortion.name];
+    var patternHighlights = [];
+    patternHighlights.push("이번 주 기록은 총 " + stats.total + "건이며 평균 감정 강도는 " + stats.avgIntensity.toFixed(1) + "점이었습니다.");
+    patternHighlights.push("가장 자주 나온 감정은 \"" + stats.topEmotion.name + "\"이고 " + stats.topEmotion.count + "건에서 나타났습니다.");
+    if (stats.topDistortion.name !== NONE_DISTORTION) {
+      patternHighlights.push("가장 자주 관찰된 사고 패턴은 \"" + stats.topDistortion.name + "\"이며 " + stats.topDistortion.count + "건에서 반복되었습니다.");
+    } else {
+      patternHighlights.push("아직 특정 왜곡이 강하게 반복되기보다 다양한 생각이 섞여 나타났습니다.");
+    }
+
+    var exercises = [];
+    if (topDistMeta) {
+      exercises = dedupeStrings(topDistMeta.q.concat(topDistMeta.alt), 3);
+    } else {
+      exercises = [
+        "자동 사고 문장 옆에 사실 근거 1개와 반대 근거 1개 적기",
+        "감정 강도가 높은 상황만 따로 모아 반복 패턴 보기",
+        "완벽한 표현 대신 중간 표현을 사용해 다시 문장 만들기"
+      ];
+    }
+
+    return {
+      summary: "이번 주에는 학습 상황에서 감정 강도가 " + stats.trend.label + "를 보였습니다. 반복되는 감정과 생각 패턴을 보면, 사건보다 해석 방식이 행동 회피를 더 크게 만들고 있을 가능성이 있습니다.",
+      patternHighlights: patternHighlights,
+      emotionalTrend: "주간 감정 흐름은 \"" + stats.trend.label + "\"입니다. 평균 강도 변화 차이는 " + stats.trend.diff.toFixed(1) + "점입니다.",
+      recommendedExercises: exercises,
+      nextWeekFocus: stats.topDistortion.name !== NONE_DISTORTION
+        ? "\"" + stats.topDistortion.name + "\" 패턴이 보일 때마다 자동 사고를 1문장으로 적고, 그 문장을 조금 더 균형 잡힌 표현으로 바꾸는 연습을 해보세요."
+        : "감정 강도가 높았던 순간을 더 구체적으로 기록해 반복 패턴을 선명하게 만드는 데 집중해보세요.",
+      warningSignal: "감정 강도 8점 이상 기록이 반복되거나 회피 행동이 계속 늘어난다면, 혼자 버티기보다 상담 교사나 전문가와 상의하는 것이 좋습니다.",
+      source: "fallback",
+      model: "local-report-v1",
+      fallbackReason: reason || ""
+    };
+  }
+
+  function buildReportPrompt(stats) {
+    return [
+      "다음은 최근 7일간의 학습 불안 CBT 기록 통계와 샘플이다.",
+      "학생이 이해하기 쉬운 한국어로 주간 리포트를 작성하라.",
+      "전문 진단처럼 말하지 말고, 자기점검과 다음 주 연습 방향 제안에 집중하라.",
+      "주간 통계:",
+      JSON.stringify({
+        total: stats.total,
+        avgIntensity: Number(stats.avgIntensity.toFixed(1)),
+        topEmotion: stats.topEmotion,
+        topDistortion: stats.topDistortion,
+        trend: stats.trend
+      }),
+      "최근 샘플:",
+      JSON.stringify(stats.recentSamples),
+      "출력 규칙:",
+      "- summary는 이번 주 흐름을 3~4문장으로 설명",
+      "- patternHighlights는 구체적 패턴 2~4개",
+      "- emotionalTrend는 감정 흐름을 한 문단으로 설명",
+      "- recommendedExercises는 다음 주 실천할 연습 2~4개",
+      "- nextWeekFocus는 핵심 한 문단",
+      "- warningSignal은 주의할 신호 한 문단",
+      "JSON만 반환하라."
+    ].join("\n");
+  }
+
+  async function generateAiWeeklyReport(stats) {
+    var fallback = buildLocalWeeklyReport(stats, "");
+    if (!hasApiKey()) {
+      fallback.fallbackReason = "Gemini API 키가 없어 로컬 주간 리포트를 사용했습니다.";
+      return fallback;
+    }
+
+    try {
+      var raw = await callGeminiJson({
+        systemInstruction: "너는 학습 불안 CBT 기록을 요약하는 한국어 AI 코치다. 학생이 이해하기 쉬운 말로 주간 패턴과 다음 주 실천 방향을 제안하라.",
+        prompt: buildReportPrompt(stats),
+        schema: REPORT_SCHEMA,
+        temperature: 0.35
+      });
+
+      return {
+        summary: String(raw.summary || fallback.summary),
+        patternHighlights: dedupeStrings(Array.isArray(raw.patternHighlights) ? raw.patternHighlights : fallback.patternHighlights, 4),
+        emotionalTrend: String(raw.emotionalTrend || fallback.emotionalTrend),
+        recommendedExercises: dedupeStrings(Array.isArray(raw.recommendedExercises) ? raw.recommendedExercises : fallback.recommendedExercises, 4),
+        nextWeekFocus: String(raw.nextWeekFocus || fallback.nextWeekFocus),
+        warningSignal: String(raw.warningSignal || fallback.warningSignal),
+        source: "gemini",
+        model: getModelName(),
+        fallbackReason: ""
+      };
+    } catch (error) {
+      fallback.fallbackReason = error.message;
+      return fallback;
+    }
+  }
+
+  function setStatusPill(id, tone, icon, text) {
+    var el = $(id);
+    if (!el) return;
+    el.className = "status-pill " + tone;
+    el.innerHTML = "<i class=\"fa-solid " + icon + "\"></i><span>" + escapeHtml(text) + "</span>";
+  }
+
+  function syncModeStatus() {
+    if (hasApiKey()) {
+      var label = settings.verifiedAt ? "Gemini 연결 준비됨 · " + getModelName() : "Gemini 키 저장됨 · 테스트 권장";
+      setStatusPill("api-status", settings.verifiedAt ? "status-good" : "status-warn", settings.verifiedAt ? "fa-circle-check" : "fa-circle-exclamation", label);
+      setStatusPill("hero-ai-status", settings.verifiedAt ? "status-good" : "status-warn", settings.verifiedAt ? "fa-bolt" : "fa-circle-exclamation", settings.verifiedAt ? "Gemini 분석 모드로 준비되었습니다." : "Gemini 키는 저장됐지만 연결 테스트가 아직 없습니다.");
+      $("api-note").textContent = "연결된 모델: " + getModelName() + (settings.verifiedAt ? " · 마지막 확인 " + settings.verifiedAt : " · 연결 테스트를 눌러 확인하세요.");
+    } else {
+      setStatusPill("api-status", "status-warn", "fa-circle-exclamation", "저장된 API 키 없음");
+      setStatusPill("hero-ai-status", "status-warn", "fa-circle-exclamation", "현재 로컬 규칙 분석 모드입니다.");
+      $("api-note").textContent = "Gemini 키가 없으면 기록 저장과 차트는 그대로 동작하지만, 분석 문장은 로컬 규칙 엔진이 생성합니다.";
+    }
+  }
+
+  function renderDistortionCards() {
+    var html = "";
+    for (var i = 0; i < DIST_NAMES.length; i++) {
+      var name = DIST_NAMES[i];
+      var meta = DIST[name];
+      html += "<article class=\"distortion-card\">";
+      html += "<div class=\"distortion-card-head\">";
+      html += "<span style=\"background:" + meta.color + "18; color:" + meta.color + ";\"><i class=\"fa-solid " + meta.icon + "\"></i></span>";
+      html += "<strong style=\"margin:0; font-size:15px;\">" + escapeHtml(name) + "</strong>";
+      html += "</div>";
+      html += "<p>" + escapeHtml(meta.cardDesc || meta.desc) + "</p>";
+      html += "</article>";
+    }
+    $("distortion-grid").innerHTML = html;
+  }
+
+  function renderEmotionChips() {
+    var html = "";
+    for (var i = 0; i < EMOTIONS.length; i++) {
+      html += "<button type=\"button\" class=\"emotion-chip\" data-emotion=\"" + escapeHtml(EMOTIONS[i]) + "\">" + escapeHtml(EMOTIONS[i]) + "</button>";
+    }
+    $("emotion-grid").innerHTML = html;
+  }
+
+  function setSelectedEmotion(value) {
+    selectedEmotion = value;
+    var chips = $("emotion-grid").querySelectorAll(".emotion-chip");
+    for (var i = 0; i < chips.length; i++) {
+      chips[i].classList.toggle("selected", chips[i].getAttribute("data-emotion") === value);
+    }
+  }
+
+  function updateFormUi() {
+    for (var i = 0; i < 4; i++) {
+      $("step-" + i).classList.toggle("active", i === formStep);
+    }
+
+    var labels = ["상황 입력", "생각 입력", "감정 입력", "행동 입력"];
+    $("step-label").textContent = (formStep + 1) + " / 4 · " + labels[formStep];
+    $("progress-bar").style.width = ((formStep + 1) * 25) + "%";
+
+    var dots = $("step-dots").children;
+    for (var j = 0; j < dots.length; j++) {
+      dots[j].classList.toggle("active", j <= formStep);
+    }
+
+    $("prev-step").style.display = formStep === 0 ? "none" : "inline-flex";
+    $("next-step").innerHTML = formStep === 3
+      ? "<i class=\"fa-solid fa-wand-magic-sparkles\"></i> 분석하고 저장"
+      : "다음 <i class=\"fa-solid fa-arrow-right\"></i>";
+  }
+
+  function getFormRecord() {
+    return {
+      id: Date.now(),
+      date: new Date().toISOString(),
+      situation: $("field-situation").value.trim(),
+      thought: $("field-thought").value.trim(),
+      emotion: selectedEmotion || "혼란",
+      intensity: clamp(parseInt($("field-intensity").value, 10) || 5, 1, 10),
+      behavior: $("field-behavior").value.trim(),
+      analysis: null
+    };
+  }
+
+  function validateCurrentStep() {
+    if (formStep === 0) return $("field-situation").value.trim().length >= 8;
+    if (formStep === 1) return $("field-thought").value.trim().length >= 6;
+    if (formStep === 2) return !!selectedEmotion;
+    if (formStep === 3) return $("field-behavior").value.trim().length >= 4;
+    return false;
+  }
+
+  function setRecordStatus(text) {
+    $("record-status").textContent = text || "";
+  }
+
+  function resetForm() {
+    formStep = 0;
+    selectedEmotion = null;
+    $("field-situation").value = "";
+    $("field-thought").value = "";
+    $("field-behavior").value = "";
+    $("field-intensity").value = "5";
+    $("intensity-value").textContent = "5";
+    setSelectedEmotion(null);
+    updateFormUi();
+    setRecordStatus("");
+  }
+
+  function setFormBusy(isBusy, label) {
+    isFormBusy = isBusy;
+    $("prev-step").disabled = isBusy;
+    $("next-step").disabled = isBusy;
+    $("next-step").innerHTML = isBusy
+      ? "<i class=\"fa-solid fa-spinner fa-spin\"></i> " + escapeHtml(label || "분석 중")
+      : (formStep === 3 ? "<i class=\"fa-solid fa-wand-magic-sparkles\"></i> 분석하고 저장" : "다음 <i class=\"fa-solid fa-arrow-right\"></i>");
+  }
+
+  function invalidateWeeklyCache() {
+    weeklyReportCache = null;
+    saveReportCache();
+  }
+
+  async function submitFormRecord() {
+    if (!validateCurrentStep()) {
+      var errors = [
+        "상황을 조금 더 구체적으로 적어주세요.",
+        "자동 사고 문장을 6자 이상 적어주세요.",
+        "감정을 선택해주세요.",
+        "행동을 4자 이상 적어주세요."
+      ];
+      toast(errors[formStep], "warn");
+      return;
+    }
+
+    if (formStep < 3) {
+      formStep += 1;
+      updateFormUi();
+      return;
+    }
+
+    var record = getFormRecord();
+    setFormBusy(true, "분석 중");
+    setRecordStatus("기록을 저장하고 분석 중입니다...");
+
+    var analysis = await analyzeRecord(record);
+    record.analysis = analysis;
+    records.unshift(record);
+    saveRecords();
+    invalidateWeeklyCache();
+    refreshDashboard();
+    renderReport(currentReportMode);
+    showResult(record);
+    resetForm();
+    setFormBusy(false);
+
+    if (analysis.source === "gemini") {
+      toast("Gemini 분석이 완료되고 기록이 저장되었습니다.", "success");
+    } else {
+      toast("기록은 저장되었고 로컬 분석으로 결과를 생성했습니다.", "warn");
+    }
+  }
+
+  function switchTab(tab) {
+    var buttons = document.querySelectorAll(".tab-btn");
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].classList.toggle("active", buttons[i].getAttribute("data-tab") === tab);
+    }
+
+    $("form-panel").style.display = tab === "form" ? "block" : "none";
+    $("chat-panel").classList.toggle("active", tab === "chat");
+    if (tab === "chat" && !$("chat-log").children.length) initChat();
+  }
+
+  function addChatBubble(type, text) {
+    var row = document.createElement("div");
+    row.className = "bubble-row " + type;
+    var bubble = document.createElement("div");
+    bubble.className = "bubble " + (type === "user" ? "user" : "ai");
+    bubble.textContent = text;
+    row.appendChild(bubble);
+    $("chat-log").appendChild(row);
+    $("chat-log").scrollTop = $("chat-log").scrollHeight;
+  }
+
+  function showTyping() {
+    var row = document.createElement("div");
+    row.className = "bubble-row";
+    row.id = "typing-row";
+    row.innerHTML = "<div class=\"typing\"><span></span><span></span><span></span></div>";
+    $("chat-log").appendChild(row);
+    $("chat-log").scrollTop = $("chat-log").scrollHeight;
+  }
+
+  function hideTyping() {
+    var el = $("typing-row");
+    if (el && el.parentNode) el.parentNode.removeChild(el);
+  }
+
+  function delay(ms) {
+    return new Promise(function(resolve) {
+      setTimeout(resolve, ms);
+    });
+  }
+
+  function parseEmotionMessage(message) {
+    var emotion = "혼란";
+    for (var i = 0; i < EMOTIONS.length; i++) {
+      if (message.indexOf(EMOTIONS[i]) !== -1) {
+        emotion = EMOTIONS[i];
+        break;
+      }
+    }
+
+    var match = message.match(/(\d+)/);
+    var intensity = match ? clamp(parseInt(match[1], 10) || 5, 1, 10) : 5;
+    return {
+      emotion: emotion,
+      intensity: intensity
+    };
+  }
+
+  function initChat() {
+    chatStep = 0;
+    chatData = {};
+    $("chat-log").innerHTML = "";
+    addChatBubble("ai", CHAT_STEPS[0].prompt);
+    $("chat-input").value = "";
+    $("chat-input").disabled = false;
+    $("chat-send").disabled = false;
+  }
+
+  function setChatBusy(isBusy) {
+    isChatBusy = isBusy;
+    $("chat-input").disabled = isBusy;
+    $("chat-send").disabled = isBusy;
+    if (isBusy) {
+      $("chat-send").innerHTML = "<i class=\"fa-solid fa-spinner fa-spin\"></i>";
+    } else {
+      $("chat-send").innerHTML = "<i class=\"fa-solid fa-paper-plane\"></i> 전송";
+    }
+  }
+
+  async function sendChatMessage() {
+    if (isChatBusy) return;
+    var value = $("chat-input").value.trim();
+    if (!value) return;
+
+    addChatBubble("user", value);
+    $("chat-input").value = "";
+
+    var field = CHAT_STEPS[chatStep].field;
+    if (field === "emotion") {
+      var parsed = parseEmotionMessage(value);
+      chatData.emotion = parsed.emotion;
+      chatData.intensity = parsed.intensity;
+    } else {
+      chatData[field] = value;
+    }
+
+    chatStep += 1;
+
+    if (chatStep < CHAT_STEPS.length) {
+      setChatBusy(true);
+      showTyping();
+      await delay(700);
+      hideTyping();
+      addChatBubble("ai", CHAT_STEPS[chatStep].prompt);
+      setChatBusy(false);
+      $("chat-input").focus();
+      return;
+    }
+
+    setChatBusy(true);
+    showTyping();
+    await delay(700);
+    hideTyping();
+    addChatBubble("ai", "기록이 정리되었습니다. 지금 바로 생각 패턴을 분석해볼게요.");
+
+    var record = {
+      id: Date.now(),
+      date: new Date().toISOString(),
+      situation: chatData.situation || "",
+      thought: chatData.thought || "",
+      emotion: chatData.emotion || "혼란",
+      intensity: chatData.intensity || 5,
+      behavior: chatData.behavior || "",
+      analysis: null
+    };
+
+    var analysis = await analyzeRecord(record);
+    record.analysis = analysis;
+    records.unshift(record);
+    saveRecords();
+    invalidateWeeklyCache();
+    refreshDashboard();
+    renderReport(currentReportMode);
+    showResult(record);
+    initChat();
+    setChatBusy(false);
+
+    if (analysis.source === "gemini") {
+      toast("대화형 기록이 저장되고 Gemini 분석이 완료되었습니다.", "success");
+    } else {
+      toast("대화형 기록은 저장되었고 로컬 분석으로 결과를 생성했습니다.", "warn");
+    }
+  }
+
+  function fillSample(key) {
+    var sample = SAMPLE_RECORDS[key];
+    if (!sample) return;
+    switchTab("form");
+    $("field-situation").value = sample.situation;
+    $("field-thought").value = sample.thought;
+    $("field-behavior").value = sample.behavior;
+    $("field-intensity").value = String(sample.intensity);
+    $("intensity-value").textContent = String(sample.intensity);
+    setSelectedEmotion(sample.emotion);
+    setRecordStatus("예시 데이터가 채워졌습니다. 내용을 수정한 뒤 분석해도 됩니다.");
+    formStep = 0;
+    updateFormUi();
+    toast("예시 기록을 채웠습니다.", "success");
+  }
+
+  function resultSourceBadge(analysis) {
+    if (analysis.source === "gemini") {
+      return "<span class=\"badge green\"><i class=\"fa-solid fa-robot\"></i> Gemini · " + escapeHtml(analysis.model) + "</span>";
+    }
+    return "<span class=\"badge sand\"><i class=\"fa-solid fa-compass\"></i> 로컬 분석</span>";
+  }
+
+  function renderTextList(items) {
+    var html = "";
+    for (var i = 0; i < items.length; i++) {
+      html += "<div class=\"text-item\"><span>" + (i + 1) + ".</span><div>" + escapeHtml(items[i]) + "</div></div>";
+    }
+    return html;
+  }
+
+  function showResult(record) {
+    var analysis = record.analysis || getRuleBasedAnalysis(record, "");
+    var distortionHtml = "";
+
+    for (var i = 0; i < analysis.distortions.length; i++) {
+      var item = analysis.distortions[i];
+      distortionHtml += "<article class=\"analysis-card\">";
+      distortionHtml += "<div class=\"analysis-card-head\">";
+      distortionHtml += "<div class=\"analysis-card-head-left\">";
+      distortionHtml += "<span class=\"analysis-icon\" style=\"background:" + item.color + "18; color:" + item.color + ";\"><i class=\"fa-solid " + item.icon + "\"></i></span>";
+      distortionHtml += "<div><strong style=\"margin-bottom: 4px;\">" + escapeHtml(item.name) + "</strong><div class=\"small-muted\">" + escapeHtml(item.reason) + "</div></div>";
+      distortionHtml += "</div>";
+      distortionHtml += "<span class=\"analysis-score\">가능성 " + item.confidence + "%</span>";
+      distortionHtml += "</div>";
+      if (item.evidence) {
+        distortionHtml += "<p><strong style=\"font-size: 13px;\">판단 근거</strong><br>" + escapeHtml(item.evidence) + "</p>";
+      }
+      distortionHtml += "</article>";
+    }
+
+    var infoBlocks = "";
+    infoBlocks += "<div class=\"text-stack\" style=\"margin-top: 18px;\">";
+    infoBlocks += "<div class=\"text-block\"><h4><i class=\"fa-solid fa-lightbulb\" style=\"color: var(--green); margin-right: 8px;\"></i>AI 해석</h4><div class=\"text-list\"><div class=\"text-item\"><span>•</span><div>" + escapeHtml(analysis.summary) + "</div></div></div></div>";
+    infoBlocks += "<div class=\"text-block\"><h4><i class=\"fa-solid fa-circle-question\" style=\"color: var(--green); margin-right: 8px;\"></i>다시 생각해볼 질문</h4><div class=\"text-list\">" + renderTextList(analysis.reflectionQuestions) + "</div></div>";
+    infoBlocks += "<div class=\"text-block\"><h4><i class=\"fa-solid fa-scale-balanced\" style=\"color: var(--green); margin-right: 8px;\"></i>대안적 사고</h4><div class=\"text-list\">" + renderTextList(analysis.alternativeThoughts) + "</div></div>";
+    infoBlocks += "<div class=\"text-block\"><h4><i class=\"fa-solid fa-brain\" style=\"color: var(--green); margin-right: 8px;\"></i>메타인지 힌트</h4><div class=\"text-list\"><div class=\"text-item\"><span>•</span><div>" + escapeHtml(analysis.metacognitionInsight) + "</div></div></div></div>";
+    infoBlocks += "<div class=\"text-block\"><h4><i class=\"fa-solid fa-footprint\" style=\"color: var(--green); margin-right: 8px;\"></i>오늘의 1단계 행동</h4><div class=\"text-list\"><div class=\"text-item\"><span>•</span><div>" + escapeHtml(analysis.nextAction) + "</div></div></div></div>";
+    infoBlocks += "<div class=\"analysis-note\">" + escapeHtml(analysis.cautionNote) + (analysis.fallbackReason ? "<br><br>폴백 사유: " + escapeHtml(analysis.fallbackReason) : "") + "</div>";
+    infoBlocks += "</div>";
+
+    $("result-body").innerHTML =
+      "<div style=\"display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px;\">" +
+      resultSourceBadge(analysis) +
+      "<span class=\"badge gray\"><i class=\"fa-solid fa-clock\"></i> " + escapeHtml(formatDateTime(record.date)) + "</span>" +
+      "<span class=\"badge gray\"><i class=\"fa-solid fa-heart\"></i> " + escapeHtml(record.emotion) + " " + record.intensity + "/10</span>" +
+      "</div>" +
+      "<div class=\"modal-grid\">" +
+      "<div class=\"mini-card\"><small>상황</small><p>" + escapeHtml(record.situation) + "</p></div>" +
+      "<div class=\"mini-card\"><small>생각</small><p>" + escapeHtml(record.thought) + "</p></div>" +
+      "<div class=\"mini-card\"><small>감정</small><p>" + escapeHtml(record.emotion) + " · 강도 " + record.intensity + "/10</p></div>" +
+      "<div class=\"mini-card\"><small>행동</small><p>" + escapeHtml(record.behavior) + "</p></div>" +
+      "</div>" +
+      "<div class=\"analysis-stack\">" + distortionHtml + "</div>" +
+      infoBlocks;
+
+    $("result-modal").classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeResultModal() {
+    $("result-modal").classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  function refreshDashboard() {
+    updateBackupStatus();
+    if (!records.length) {
+      $("dashboard-empty").style.display = "block";
+      $("dashboard-shell").style.display = "none";
+      return;
+    }
+
+    $("dashboard-empty").style.display = "none";
+    $("dashboard-shell").style.display = "grid";
+    drawLineChart();
+    drawDonutChart();
+    drawHeatmap();
+    drawRecordList();
+  }
+
+  function drawLineChart() {
+    var ctx = $("line-chart").getContext("2d");
+    if (lineChart) lineChart.destroy();
+
+    var ordered = records.slice().reverse();
+    lineChart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: ordered.map(function(item) { return formatDateShort(item.date); }),
+        datasets: [{
+          data: ordered.map(function(item) { return item.intensity; }),
+          borderColor: "#2f6f58",
+          backgroundColor: "rgba(47, 111, 88, 0.12)",
+          fill: true,
+          pointRadius: 4,
+          pointHoverRadius: 5,
+          tension: 0.35
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: "#173a2d",
+            callbacks: {
+              label: function(context) {
+                return "감정 강도 " + context.raw + "/10";
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            min: 0,
+            max: 10,
+            ticks: { stepSize: 2 }
+          },
+          x: {
+            grid: { display: false }
+          }
+        }
+      }
+    });
+  }
+
+  function drawDonutChart() {
+    var ctx = $("donut-chart").getContext("2d");
+    if (donutChart) donutChart.destroy();
+
+    var counts = {};
+    for (var i = 0; i < records.length; i++) {
+      var primary = records[i].analysis && records[i].analysis.distortions && records[i].analysis.distortions[0] ? records[i].analysis.distortions[0].name : NONE_DISTORTION;
+      if (primary === NONE_DISTORTION) continue;
+      counts[primary] = (counts[primary] || 0) + 1;
+    }
+
+    var entries = [];
+    for (var name in counts) entries.push([name, counts[name]]);
+    entries.sort(function(a, b) { return b[1] - a[1]; });
+    if (!entries.length) entries.push([NONE_DISTORTION, 1]);
+
+    donutChart = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels: entries.map(function(item) { return item[0]; }),
+        datasets: [{
+          data: entries.map(function(item) { return item[1]; }),
+          backgroundColor: entries.map(function(item) {
+            return getDistMeta(item[0]).color;
+          }),
+          borderColor: "#fff",
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: "58%",
+        plugins: {
+          legend: {
+            position: "right",
+            labels: {
+              font: { size: 12 },
+              usePointStyle: true
+            }
+          }
+        }
+      }
+    });
+  }
+
+  function drawHeatmap() {
+    var dayLabels = ["월", "화", "수", "목", "금", "토", "일"];
+    var timeLabels = ["오전", "오후", "저녁", "밤"];
+    var grid = {};
+    var i;
+
+    for (i = 0; i < 7; i++) {
+      for (var j = 0; j < 4; j++) {
+        grid[i + "-" + j] = [];
+      }
+    }
+
+    for (i = 0; i < records.length; i++) {
+      var date = new Date(records[i].date);
+      var day = date.getDay() - 1;
+      if (day < 0) day = 6;
+      var hour = date.getHours();
+      var slot = hour < 6 ? 3 : hour < 12 ? 0 : hour < 18 ? 1 : 2;
+      grid[day + "-" + slot].push(records[i].intensity);
+    }
+
+    function tone(values) {
+      if (!values.length) {
+        return "background: rgba(244, 239, 231, 0.9); color: #9a9588;";
+      }
+      var sum = 0;
+      for (var k = 0; k < values.length; k++) sum += values[k];
+      var avg = sum / values.length;
+      var ratio = (avg - 1) / 9;
+      var red = Math.round(126 + ratio * 72);
+      var green = Math.round(178 - ratio * 72);
+      var blue = Math.round(149 - ratio * 54);
+      return "background: rgba(" + red + "," + green + "," + blue + "," + (0.22 + ratio * 0.55) + "); color:" + (ratio > 0.45 ? "#fff" : "#173a2d") + ";";
+    }
+
+    var html = "<table class=\"heat-table\"><thead><tr><th></th>";
+    for (i = 0; i < timeLabels.length; i++) {
+      html += "<th>" + timeLabels[i] + "</th>";
+    }
+    html += "</tr></thead><tbody>";
+
+    for (i = 0; i < dayLabels.length; i++) {
+      html += "<tr><td>" + dayLabels[i] + "</td>";
+      for (var t = 0; t < timeLabels.length; t++) {
+        var values = grid[i + "-" + t];
+        var avgValue = values.length ? (values.reduce(function(a, b) { return a + b; }, 0) / values.length).toFixed(1) : "-";
+        html += "<td><div class=\"heat-cell\" style=\"" + tone(values) + "\">" + avgValue + "</div></td>";
+      }
+      html += "</tr>";
+    }
+
+    html += "</tbody></table>";
+    $("heatmap").innerHTML = html;
+  }
+
+  function drawRecordList() {
+    var html = "";
+    var visible = records.slice(0, 20);
+
+    for (var i = 0; i < visible.length; i++) {
+      var record = visible[i];
+      var primary = record.analysis && record.analysis.distortions && record.analysis.distortions[0] ? record.analysis.distortions[0] : normalizeDistortionItem({ name: NONE_DISTORTION, confidence: 36, reason: "", evidence: "" });
+      var sourceBadge = record.analysis && record.analysis.source === "gemini"
+        ? "<span class=\"badge green\"><i class=\"fa-solid fa-robot\"></i> Gemini</span>"
+        : "<span class=\"badge sand\"><i class=\"fa-solid fa-compass\"></i> 로컬</span>";
+
+      html += "<article class=\"record-item\" data-record-id=\"" + record.id + "\">";
+      html += "<div class=\"record-head\">";
+      html += "<div style=\"flex:1; min-width:0;\">";
+      html += "<div class=\"record-badges\">";
+      html += "<span class=\"badge gray\"><i class=\"fa-solid fa-clock\"></i> " + escapeHtml(formatDateTime(record.date)) + "</span>";
+      html += "<span class=\"badge gray\" style=\"background:" + primary.color + "18; color:" + primary.color + ";\"><i class=\"fa-solid " + primary.icon + "\"></i> " + escapeHtml(primary.name) + "</span>";
+      html += sourceBadge;
+      html += "</div>";
+      html += "<p class=\"record-title\">" + escapeHtml(record.situation) + "</p>";
+      html += "<div class=\"record-sub\">\"" + escapeHtml(record.thought) + "\"</div>";
+      html += "</div>";
+      html += "<div class=\"record-score\">";
+      html += "<strong style=\"color:" + (record.intensity >= 7 ? "#b85d4c" : record.intensity >= 4 ? "#b78939" : "#2f6f58") + ";\">" + record.intensity + "</strong>";
+      html += "<span>" + escapeHtml(record.emotion) + "</span>";
+      html += "</div>";
+      html += "</div>";
+      html += "</article>";
+    }
+
+    $("record-list").innerHTML = html;
+  }
+
+  function renderReport(mode) {
+    currentReportMode = mode || "local";
+    var stats = buildWeeklyStats();
+    var report;
+
+    if (mode === "ai" && weeklyReportCache && weeklyReportCache.signature === stats.signature) {
+      report = weeklyReportCache.report;
+    } else {
+      report = buildLocalWeeklyReport(stats, "");
+      currentReportMode = "local";
+    }
+
+    setReportModeStatus(report);
+
+    if (!stats.total) {
+      $("report-box").innerHTML =
+        "<div class=\"empty-card\">" +
+        "<div class=\"empty-mark\"><i class=\"fa-solid fa-file-circle-plus\"></i></div>" +
+        "<h3 style=\"margin-bottom: 10px;\">이번 주 기록이 없습니다</h3>" +
+        "<p class=\"helper\" style=\"max-width: 520px; margin: 0 auto 18px;\">리포트는 최근 7일 기록을 기준으로 생성됩니다. 먼저 한 건 이상 기록한 뒤 다시 확인해주세요.</p>" +
+        "<a href=\"#record\" class=\"btn primary\"><i class=\"fa-solid fa-pen\"></i> 기록 시작</a>" +
+        "</div>";
+      return;
+    }
+
+    $("report-box").innerHTML = buildReportHtml(stats, report);
+  }
+
+  function setReportModeStatus(report) {
+    if (report.source === "gemini") {
+      setStatusPill("report-mode-status", "status-good", "fa-robot", "Gemini 리포트 표시 중 · " + report.model);
+    } else {
+      setStatusPill("report-mode-status", "status-warn", "fa-table", "로컬 요약 리포트 표시 중");
+    }
+  }
+
+  function buildReportHtml(stats, report) {
+    var highlights = renderReportList(report.patternHighlights, "•");
+    var exercises = renderReportList(report.recommendedExercises, "→");
+    var topDistText = stats.topDistortion.name === NONE_DISTORTION ? "뚜렷한 우세 패턴 없음" : stats.topDistortion.name;
+
+    return "" +
+      "<article class=\"report-panel\">" +
+        "<div class=\"report-header\">" +
+          "<div>" +
+            "<h3>최근 7일 리포트</h3>" +
+            "<p>" + escapeHtml((stats.from.getMonth() + 1) + "/" + stats.from.getDate() + " ~ " + (stats.to.getMonth() + 1) + "/" + stats.to.getDate()) + " · 총 " + stats.total + "건 기록</p>" +
+          "</div>" +
+          resultSourceBadge(report) +
+        "</div>" +
+
+        "<div class=\"report-stats\">" +
+          "<article class=\"report-stat\"><strong>" + stats.total + "</strong><span>최근 7일 기록 수</span></article>" +
+          "<article class=\"report-stat\"><strong>" + stats.avgIntensity.toFixed(1) + "</strong><span>평균 감정 강도</span></article>" +
+          "<article class=\"report-stat\"><strong>" + escapeHtml(stats.topEmotion.name) + "</strong><span>가장 많이 느낀 감정 · " + stats.topEmotion.count + "건</span></article>" +
+          "<article class=\"report-stat\"><strong>" + escapeHtml(topDistText) + "</strong><span>주요 왜곡 패턴 · " + stats.topDistortion.count + "건</span></article>" +
+        "</div>" +
+
+        "<div class=\"report-block\">" +
+          "<h4><i class=\"fa-solid fa-lightbulb\" style=\"color: var(--green); margin-right: 8px;\"></i>이번 주 요약</h4>" +
+          "<p>" + escapeHtml(report.summary) + "</p>" +
+        "</div>" +
+
+        "<div class=\"report-insight-grid\">" +
+          "<div class=\"report-block\">" +
+            "<h4><i class=\"fa-solid fa-crosshairs\" style=\"color: var(--green); margin-right: 8px;\"></i>패턴 하이라이트</h4>" +
+            "<div class=\"report-list\">" + highlights + "</div>" +
+          "</div>" +
+          "<div class=\"report-block\">" +
+            "<h4><i class=\"fa-solid fa-chart-line\" style=\"color: var(--green); margin-right: 8px;\"></i>감정 흐름 해석</h4>" +
+            "<p>" + escapeHtml(report.emotionalTrend) + "</p>" +
+          "</div>" +
+        "</div>" +
+
+        "<div class=\"report-insight-grid\">" +
+          "<div class=\"report-block\">" +
+            "<h4><i class=\"fa-solid fa-dumbbell\" style=\"color: var(--green); margin-right: 8px;\"></i>다음 주 실천 과제</h4>" +
+            "<div class=\"report-list\">" + exercises + "</div>" +
+          "</div>" +
+          "<div class=\"report-block\">" +
+            "<h4><i class=\"fa-solid fa-bullseye\" style=\"color: var(--green); margin-right: 8px;\"></i>다음 주 초점</h4>" +
+            "<p>" + escapeHtml(report.nextWeekFocus) + "</p>" +
+            "<div class=\"analysis-note\" style=\"margin-top: 14px;\">" + escapeHtml(report.warningSignal) + (report.fallbackReason ? "<br><br>폴백 사유: " + escapeHtml(report.fallbackReason) : "") + "</div>" +
+          "</div>" +
+        "</div>" +
+      "</article>";
+  }
+
+  function renderReportList(items, marker) {
+    var html = "";
+    for (var i = 0; i < items.length; i++) {
+      html += "<div class=\"report-list-item\"><span>" + escapeHtml(marker) + "</span><div>" + escapeHtml(items[i]) + "</div></div>";
+    }
+    return html;
+  }
+
+  function applySavedSettingsToInputs() {
+    $("api-key").value = settings.apiKey || "";
+    $("model-name").value = settings.model || DEFAULT_MODEL;
+  }
+
+  async function testGeminiConnection() {
+    if (!String($("api-key").value).trim()) {
+      toast("먼저 Gemini API 키를 입력해주세요.", "warn");
+      return;
+    }
+
+    settings.apiKey = $("api-key").value.trim();
+    settings.model = $("model-name").value.trim() || DEFAULT_MODEL;
+    saveSettings();
+    syncModeStatus();
+
+    var button = $("test-api");
+    button.disabled = true;
+    button.innerHTML = "<i class=\"fa-solid fa-spinner fa-spin\"></i> 테스트 중";
+
+    try {
+      var raw = await callGeminiJson({
+        systemInstruction: "짧은 연결 테스트를 위한 시스템이다.",
+        prompt: "연결 테스트입니다. {ok:boolean, message:string} 형태로 짧게 응답하세요.",
+        schema: {
+          type: "object",
+          properties: {
+            ok: { type: "boolean" },
+            message: { type: "string" }
+          },
+          required: ["ok", "message"]
+        },
+        temperature: 0
+      });
+
+      settings.verifiedAt = new Date().toLocaleString("ko-KR");
+      saveSettings();
+      syncModeStatus();
+      toast("Gemini 연결이 확인되었습니다.", "success");
+      $("api-note").textContent = "연결 테스트 통과: " + String(raw.message || "응답 확인 완료");
+    } catch (error) {
+      settings.verifiedAt = "";
+      saveSettings();
+      syncModeStatus();
+      toast("연결 테스트에 실패했습니다. 로컬 폴백은 계속 사용 가능합니다.", "error");
+      $("api-note").textContent = "연결 오류: " + error.message;
+    } finally {
+      button.disabled = false;
+      button.innerHTML = "<i class=\"fa-solid fa-wifi\"></i> 연결 테스트";
+    }
+  }
+
+  function loadDemoData() {
+    var now = Date.now();
+    var day = 24 * 60 * 60 * 1000;
+    var demo = [
+      { off: -6, key: "exam" },
+      { off: -5, key: "presentation" },
+      { off: -4, key: "deadline" },
+      { off: -3, data: {
+        situation: "국어 시험에서 85점을 받았는데 예상보다 낮아서 성적표를 계속 다시 봤다.",
+        thought: "85점이면 거의 0점이나 마찬가지야. 상위권은 다 95점 이상인데 나만 못했어.",
+        emotion: "수치심",
+        intensity: 6,
+        behavior: "성적표를 가방 안쪽에 숨기고 복습 계획을 세우지 않았다."
+      }},
+      { off: -2, data: {
+        situation: "학원에서 선생님이 이 문제는 쉬웠다고 말했는데 나는 못 풀었다.",
+        thought: "다들 쉬운데 나만 못 풀었어. 나는 바보 같고 앞으로도 계속 이럴 거야.",
+        emotion: "무기력",
+        intensity: 8,
+        behavior: "남은 시간 내내 문제를 보지 못하고 멍하게 앉아 있었다."
+      }},
+      { off: -1, data: {
+        situation: "친구가 요즘 공부 많이 하네라고 말했을 때 순간적으로 마음이 불편했다.",
+        thought: "저 말은 나를 비꼬는 거야. 속으로는 내가 못한다고 생각할 거야.",
+        emotion: "짜증",
+        intensity: 5,
+        behavior: "대답을 짧게 하고 자리를 피했다."
+      }}
+    ];
+
+    for (var i = 0; i < demo.length; i++) {
+      var payload = demo[i].data || SAMPLE_RECORDS[demo[i].key];
+      var record = {
+        id: now + demo[i].off * day + Math.floor(Math.random() * 1000),
+        date: new Date(now + demo[i].off * day + 1000 * 60 * 60 * (i + 1)).toISOString(),
+        situation: payload.situation,
+        thought: payload.thought,
+        emotion: payload.emotion,
+        intensity: payload.intensity,
+        behavior: payload.behavior,
+        analysis: null
+      };
+      record.analysis = getRuleBasedAnalysis(record, "데모 데이터는 로컬 분석으로 생성되었습니다.");
+      records.unshift(record);
+    }
+
+    saveRecords();
+    invalidateWeeklyCache();
+    refreshDashboard();
+    renderReport(currentReportMode);
+    toast("데모 데이터가 추가되었습니다.", "success");
+  }
+
+  function updateNav() {
+    var ids = ["about", "design", "setup", "record", "dashboard", "report"];
+    var current = "";
+    for (var i = 0; i < ids.length; i++) {
+      var section = $(ids[i]);
+      if (section && section.getBoundingClientRect().top <= 160) current = ids[i];
+    }
+
+    var links = document.querySelectorAll(".nav-link, .mobile-link");
+    for (var j = 0; j < links.length; j++) {
+      links[j].classList.toggle("active", links[j].getAttribute("href") === "#" + current);
+    }
+  }
+
+  function observeReveal() {
+    var observer = new IntersectionObserver(function(entries) {
+      for (var i = 0; i < entries.length; i++) {
+        if (entries[i].isIntersecting) entries[i].target.classList.add("visible");
+      }
+    }, {
+      threshold: 0.08,
+      rootMargin: "0px 0px -40px 0px"
+    });
+
+    var targets = document.querySelectorAll(".reveal");
+    for (var i = 0; i < targets.length; i++) observer.observe(targets[i]);
+  }
+
+  function bindEvents() {
+    $("emotion-grid").addEventListener("click", function(event) {
+      var button = event.target.closest(".emotion-chip");
+      if (!button) return;
+      setSelectedEmotion(button.getAttribute("data-emotion"));
+    });
+
+    $("field-intensity").addEventListener("input", function(event) {
+      $("intensity-value").textContent = event.target.value;
+    });
+
+    $("next-step").addEventListener("click", function() {
+      if (isFormBusy) return;
+      submitFormRecord();
+    });
+
+    $("prev-step").addEventListener("click", function() {
+      if (isFormBusy || formStep === 0) return;
+      formStep -= 1;
+      updateFormUi();
+    });
+
+    var tabButtons = document.querySelectorAll(".tab-btn");
+    for (var i = 0; i < tabButtons.length; i++) {
+      tabButtons[i].addEventListener("click", function() {
+        switchTab(this.getAttribute("data-tab"));
+      });
+    }
+
+    $("chat-send").addEventListener("click", sendChatMessage);
+    $("chat-input").addEventListener("keydown", function(event) {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        sendChatMessage();
+      }
+    });
+
+    document.addEventListener("click", function(event) {
+      var sampleButton = event.target.closest(".sample-btn");
+      if (sampleButton) {
+        fillSample(sampleButton.getAttribute("data-sample"));
+      }
+
+      var recordItem = event.target.closest(".record-item");
+      if (recordItem) {
+        var id = String(recordItem.getAttribute("data-record-id"));
+        var record = records.find(function(item) { return String(item.id) === id; });
+        if (record) showResult(record);
+      }
+    });
+
+    $("close-modal").addEventListener("click", closeResultModal);
+    $("result-modal").addEventListener("click", function(event) {
+      if (event.target === $("result-modal")) closeResultModal();
+    });
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "Escape") closeResultModal();
+    });
+
+    $("save-api").addEventListener("click", function() {
+      settings.apiKey = $("api-key").value.trim();
+      settings.model = $("model-name").value.trim() || DEFAULT_MODEL;
+      settings.verifiedAt = "";
+      saveSettings();
+      syncModeStatus();
+      toast(settings.apiKey ? "Gemini 설정을 저장했습니다." : "API 키가 비어 있어 로컬 모드로 유지됩니다.", settings.apiKey ? "success" : "warn");
+    });
+
+    $("clear-api").addEventListener("click", function() {
+      settings = { apiKey: "", model: DEFAULT_MODEL, verifiedAt: "" };
+      saveSettings();
+      $("api-key").value = "";
+      $("model-name").value = DEFAULT_MODEL;
+      syncModeStatus();
+      toast("저장된 Gemini 설정을 삭제했습니다.", "success");
+    });
+
+    $("test-api").addEventListener("click", testGeminiConnection);
+
+    $("export-records").addEventListener("click", exportRecordsBackup);
+
+    $("import-records").addEventListener("click", function() {
+      $("backup-file").click();
+    });
+
+    $("backup-file").addEventListener("change", function(event) {
+      var file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      var reader = new FileReader();
+      reader.onload = function(loadEvent) {
+        try {
+          var parsed = JSON.parse(String(loadEvent.target.result || "{}"));
+          importBackupPayload(parsed);
+        } catch (error) {
+          toast("백업 파일을 읽지 못했습니다. JSON 형식을 확인해주세요.", "error");
+          updateBackupStatus("백업 불러오기에 실패했습니다");
+        } finally {
+          event.target.value = "";
+        }
+      };
+      reader.onerror = function() {
+        toast("백업 파일 읽기에 실패했습니다.", "error");
+        updateBackupStatus("백업 불러오기에 실패했습니다");
+        event.target.value = "";
+      };
+      reader.readAsText(file, "utf-8");
+    });
+
+    $("load-demo").addEventListener("click", loadDemoData);
+
+    $("clear-records").addEventListener("click", function() {
+      if (!records.length) return;
+      if (!window.confirm("저장된 기록을 모두 삭제할까요?")) return;
+      records = [];
+      saveRecords();
+      invalidateWeeklyCache();
+      refreshDashboard();
+      renderReport("local");
+      toast("모든 기록을 삭제했습니다.", "success");
+    });
+
+    $("show-local-report").addEventListener("click", function() {
+      renderReport("local");
+    });
+
+    $("generate-ai-report").addEventListener("click", async function() {
+      var stats = buildWeeklyStats();
+      if (!stats.total) {
+        toast("최근 7일 기록이 있어야 주간 리포트를 생성할 수 있습니다.", "warn");
+        return;
+      }
+
+      var button = $("generate-ai-report");
+      button.disabled = true;
+      button.innerHTML = "<i class=\"fa-solid fa-spinner fa-spin\"></i> 리포트 생성 중";
+
+      var report = await generateAiWeeklyReport(stats);
+      if (report.source === "gemini") {
+        weeklyReportCache = {
+          signature: stats.signature,
+          report: report
+        };
+        saveReportCache();
+        currentReportMode = "ai";
+        $("report-box").innerHTML = buildReportHtml(stats, report);
+        setReportModeStatus(report);
+        toast("Gemini 주간 리포트를 생성했습니다.", "success");
+      } else {
+        currentReportMode = "local";
+        renderReport("local");
+        toast("Gemini 리포트 생성에 실패해 로컬 리포트를 표시했습니다.", "warn");
+      }
+
+      button.disabled = false;
+      button.innerHTML = "<i class=\"fa-solid fa-robot\"></i> Gemini 리포트 생성";
+    });
+
+    $("mobile-toggle").addEventListener("click", function() {
+      $("mobile-menu").classList.toggle("open");
+      this.innerHTML = $("mobile-menu").classList.contains("open")
+        ? "<i class=\"fa-solid fa-xmark\"></i>"
+        : "<i class=\"fa-solid fa-bars\"></i>";
+    });
+
+    var mobileLinks = document.querySelectorAll(".mobile-link");
+    for (var i = 0; i < mobileLinks.length; i++) {
+      mobileLinks[i].addEventListener("click", function() {
+        $("mobile-menu").classList.remove("open");
+        $("mobile-toggle").innerHTML = "<i class=\"fa-solid fa-bars\"></i>";
+      });
+    }
+
+    window.addEventListener("scroll", updateNav, { passive: true });
+  }
+
+  function init() {
+    loadStorage();
+    renderDistortionCards();
+    renderEmotionChips();
+    applySavedSettingsToInputs();
+    syncModeStatus();
+    updateFormUi();
+    refreshDashboard();
+    renderReport("local");
+    initChat();
+    bindEvents();
+    observeReveal();
+    updateNav();
+  }
+
+  init();
+</script>
+</body>
+</html>
