@@ -98,7 +98,7 @@
 
   #record .container,
   #dashboard .container {
-    width: min(1496px, calc(100% - 24px));
+    width: min(1600px, calc(100% - 20px));
   }
 
   .section {
@@ -696,7 +696,7 @@
   }
 
   .workspace-board {
-    padding: 12px;
+    padding: 10px;
     border-radius: 30px;
     border: 1.5px solid rgba(200, 190, 169, 0.94);
     background: rgba(255, 251, 245, 0.86);
@@ -705,22 +705,22 @@
 
   .workspace-shell {
     display: grid;
-    grid-template-columns: minmax(0, 1.62fr) minmax(350px, 0.8fr);
-    gap: 14px;
+    grid-template-columns: minmax(0, 1.68fr) minmax(420px, 0.94fr);
+    gap: 12px;
     align-items: start;
   }
 
   .workspace-left,
   .workspace-right {
     display: grid;
-    gap: 14px;
+    gap: 12px;
     align-content: start;
   }
 
   .workspace-left-bottom {
     display: grid;
-    grid-template-columns: minmax(0, 1.42fr) minmax(228px, 0.48fr);
-    gap: 14px;
+    grid-template-columns: minmax(0, 1.34fr) minmax(320px, 0.76fr);
+    gap: 12px;
   }
 
   .workspace-panel {
@@ -764,13 +764,14 @@
   }
 
   .compact-tabs .tab-btn {
-    min-height: 58px;
-    min-width: 118px;
-    padding: 0 16px;
+    min-height: 54px;
+    min-width: 132px;
+    padding: 0 18px;
     border-radius: 14px;
     border: 1.5px solid rgba(200, 190, 169, 0.94);
     background: rgba(255, 255, 255, 0.96);
     color: var(--green-deep);
+    white-space: nowrap;
   }
 
   .workspace-form {
@@ -801,6 +802,7 @@
     color: var(--green-deep);
     font-size: 14px;
     font-weight: 800;
+    white-space: nowrap;
   }
 
   .record-field-row textarea {
@@ -980,6 +982,41 @@
     gap: 10px;
   }
 
+  .sample-utility-panel {
+    min-width: 0;
+  }
+
+  .sample-utility-panel .workspace-box-title,
+  .sample-utility-panel .btn,
+  .sample-btn strong,
+  .sample-btn .small-muted,
+  .workspace-metric-label strong,
+  .workspace-metric-value {
+    white-space: nowrap;
+  }
+
+  .sample-btn {
+    align-items: center;
+    min-height: 78px;
+    padding: 14px 16px;
+  }
+
+  .sample-btn > div {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .sample-btn strong,
+  .sample-btn .small-muted {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sample-btn strong {
+    font-size: 15px;
+  }
+
   .utility-actions {
     display: grid;
     grid-template-columns: 1fr;
@@ -1027,10 +1064,11 @@
     border-radius: 14px;
     border: 1.5px solid rgba(200, 190, 169, 0.94);
     background: rgba(255, 255, 255, 0.98);
-    font-size: 19px;
+    font-size: 18px;
     font-weight: 800;
     letter-spacing: -0.03em;
     text-align: center;
+    white-space: nowrap;
   }
 
   .workspace-chart-empty {
@@ -1078,7 +1116,7 @@
   .workspace-metric-label strong {
     display: block;
     margin: 0 0 4px;
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.4;
     letter-spacing: -0.02em;
   }
@@ -1093,7 +1131,7 @@
   .workspace-metric-value {
     color: var(--green-deep);
     margin: 0;
-    font-size: 28px;
+    font-size: 27px;
     letter-spacing: -0.04em;
     font-weight: 800;
     white-space: nowrap;
@@ -1121,11 +1159,25 @@
   }
 
   .dashboard-donut-card .chart-wrap {
-    height: 300px;
+    width: min(100%, 980px);
+    height: 760px;
+    margin: 0 auto;
   }
 
   .dashboard-donut-card {
-    padding-bottom: 18px;
+    display: grid;
+    gap: 10px;
+    justify-items: center;
+    padding-bottom: 22px;
+  }
+
+  .dashboard-donut-card h3,
+  .dashboard-donut-card .chart-note {
+    width: 100%;
+  }
+
+  .dashboard-donut-card canvas {
+    image-rendering: auto;
   }
 
   .dashboard-heatmap-card {
@@ -2637,6 +2689,11 @@
       padding: 16px;
     }
 
+    .dashboard-donut-card .chart-wrap {
+      width: min(100%, 760px);
+      height: 560px;
+    }
+
     .hero-name-card {
       max-width: 340px;
     }
@@ -2751,6 +2808,18 @@
 
     .compact-tabs .tab-btn {
       flex: 1 1 180px;
+    }
+
+    .sample-btn strong,
+    .sample-btn .small-muted,
+    .workspace-metric-label strong,
+    .workspace-metric-value {
+      white-space: normal;
+    }
+
+    .dashboard-donut-card .chart-wrap {
+      width: 100%;
+      height: 380px;
     }
 
     .record-grid > .panel {

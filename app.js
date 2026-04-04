@@ -1609,24 +1609,24 @@
           }),
           borderColor: "#fff",
           borderWidth: 2,
-          hoverOffset: 4,
-          radius: "86%"
+          hoverOffset: 8,
+          radius: "98%"
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        cutout: "60%",
+        cutout: "52%",
         plugins: {
           legend: {
             position: "bottom",
-            align: "start",
+            align: "center",
             labels: {
-              font: { size: 12 },
+              font: { size: 14 },
               usePointStyle: true,
-              padding: 14,
-              boxWidth: 10,
-              boxHeight: 10
+              padding: 20,
+              boxWidth: 12,
+              boxHeight: 12
             }
           }
         }
