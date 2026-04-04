@@ -1462,6 +1462,83 @@
     };
   }
 
+  function buildWorkspaceInsight(metrics) {
+    if (!records.length) return null;
+
+    var recentRecords = records.slice(0, Math.min(3, records.length));
+    var recentSum = 0;
+    var distortionCounts = {};
+    var dayLabels = ["월", "화", "수", "목", "금", "토", "일"];
+    var timeLabels = ["오전", "오후", "저녁", "밤"];
+    var grid = {};
+    var peak = null;
+    var i;
+
+    for (i = 0; i < recentRecords.length; i++) {
+      recentSum += recentRecords[i].intensity;
+    }
+
+    for (i = 0; i < records.length; i++) {
+      var record = records[i];
+      var primary = record.analysis && record.analysis.distortions && record.analysis.distortions[0] ? record.analysis.distortions[0].name : NONE_DISTORTION;
+      if (primary !== NONE_DISTORTION) {
+        distortionCounts[primary] = (distortionCounts[primary] || 0) + 1;
+      }
+      var date = new Date(record.date);
+      var day = date.getDay() - 1;
+      if (day < 0) day = 6;
+      var hour = date.getHours();
+      var slot = hour < 6 ? 3 : hour < 12 ? 0 : hour < 18 ? 1 : 2;
+      if (!grid[day + "-" + slot]) grid[day + "-" + slot] = [];
+      grid[day + "-" + slot].push(record.intensity);
+    }
+
+    var topDistortion = NONE_DISTORTION;
+    var topCount = 0;
+    for (var name in distortionCounts) {
+      if (distortionCounts[name] > topCount) {
+        topDistortion = name;
+        topCount = distortionCounts[name];
+      }
+    }
+
+    for (i = 0; i < dayLabels.length; i++) {
+      for (var t = 0; t < timeLabels.length; t++) {
+        var values = grid[i + "-" + t] || [];
+        if (!values.length) continue;
+        var sum = 0;
+        for (var k = 0; k < values.length; k++) sum += values[k];
+        var avg = sum / values.length;
+        if (!peak || avg > peak.avg || (avg === peak.avg && values.length > peak.count)) {
+          peak = {
+            day: i,
+            slot: t,
+            avg: avg,
+            count: values.length
+          };
+        }
+      }
+    }
+
+    var recentAvg = recentRecords.length ? recentSum / recentRecords.length : 0;
+    var compareText = "";
+    if (recentRecords.length < 2) {
+      compareText = "최근 기록이 더 쌓이면 변화 방향을 비교할 수 있습니다.";
+    } else if (recentAvg > metrics.avgIntensity + 0.3) {
+      compareText = "최근 " + recentRecords.length + "회 평균 불안이 전체 평균보다 높습니다.";
+    } else if (recentAvg < metrics.avgIntensity - 0.3) {
+      compareText = "최근 " + recentRecords.length + "회 평균 불안이 전체 평균보다 낮습니다.";
+    } else {
+      compareText = "최근 " + recentRecords.length + "회 평균 불안이 전체 평균과 비슷합니다.";
+    }
+
+    return {
+      trendText: compareText,
+      distortionText: topCount ? topDistortion + "가 가장 자주 반복되었습니다." : "아직 뚜렷한 왜곡 패턴은 집계되지 않았습니다.",
+      timeText: peak ? dayLabels[peak.day] + " " + timeLabels[peak.slot] + "에 긴장이 가장 높았습니다." : "아직 시간대 패턴을 읽을 만큼 기록이 충분하지 않습니다."
+    };
+  }
+
   function renderWorkspaceMetrics() {
     var el = $("workspace-metrics");
     if (!el) return;
@@ -1473,17 +1550,34 @@
           "<div class=\"workspace-metric-row\"><div class=\"workspace-metric-label\"><strong>평균 불안점수</strong><span>기록 후 자동 계산됩니다.</span></div><div class=\"workspace-metric-value\">-</div></div>" +
           "<div class=\"workspace-metric-row\"><div class=\"workspace-metric-label\"><strong>인지 왜곡 재구성률</strong><span>대안 사고 제시 비율을 표시합니다.</span></div><div class=\"workspace-metric-value\">-</div></div>" +
           "<div class=\"workspace-metric-row\"><div class=\"workspace-metric-label\"><strong>기록 지속률</strong><span>최근 7일 기록 빈도로 계산합니다.</span></div><div class=\"workspace-metric-value\">-</div></div>" +
+        "</div>" +
+        "<div class=\"workspace-insight-card\">" +
+          "<h4>이번 주 해석</h4>" +
+          "<div class=\"workspace-insight-list\">" +
+            "<div class=\"workspace-insight-item\"><strong>최근 변화</strong><span>기록이 쌓이면 최근 평균과 전체 평균을 비교해 보여줍니다.</span></div>" +
+            "<div class=\"workspace-insight-item\"><strong>최빈 왜곡</strong><span>가장 자주 반복된 인지 왜곡을 자동으로 요약합니다.</span></div>" +
+            "<div class=\"workspace-insight-item\"><strong>긴장 구간</strong><span>요일과 시간대 중 불안이 가장 높았던 구간을 읽어줍니다.</span></div>" +
+          "</div>" +
         "</div>";
       return;
     }
 
     var metrics = buildWorkspaceMetrics();
+    var insight = buildWorkspaceInsight(metrics);
     el.innerHTML =
       "<div class=\"workspace-metric-sheet\">" +
         "<div class=\"workspace-metric-row\"><div class=\"workspace-metric-label\"><strong>기록수</strong><span>누적 저장 기록 기준입니다.</span></div><div class=\"workspace-metric-value\">" + metrics.total + "회</div></div>" +
         "<div class=\"workspace-metric-row\"><div class=\"workspace-metric-label\"><strong>평균 불안점수</strong><span>최근 전체 기록의 평균 강도입니다.</span></div><div class=\"workspace-metric-value\">" + metrics.avgIntensity.toFixed(1) + "</div></div>" +
         "<div class=\"workspace-metric-row\"><div class=\"workspace-metric-label\"><strong>인지 왜곡 재구성률</strong><span>왜곡 포착 후 대안 사고가 함께 생성된 비율입니다.</span></div><div class=\"workspace-metric-value\">" + metrics.reframeRate + "%</div></div>" +
         "<div class=\"workspace-metric-row\"><div class=\"workspace-metric-label\"><strong>기록 지속률</strong><span>최근 7일 기준 기록이 남은 날짜 비율입니다.</span></div><div class=\"workspace-metric-value\">" + metrics.continuityRate + "%</div></div>" +
+      "</div>" +
+      "<div class=\"workspace-insight-card\">" +
+        "<h4>이번 주 해석</h4>" +
+        "<div class=\"workspace-insight-list\">" +
+          "<div class=\"workspace-insight-item\"><strong>최근 변화</strong><span>" + escapeHtml(insight.trendText) + "</span></div>" +
+          "<div class=\"workspace-insight-item\"><strong>최빈 왜곡</strong><span>" + escapeHtml(insight.distortionText) + "</span></div>" +
+          "<div class=\"workspace-insight-item\"><strong>긴장 구간</strong><span>" + escapeHtml(insight.timeText) + "</span></div>" +
+        "</div>" +
       "</div>";
   }
 

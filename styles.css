@@ -1137,6 +1137,48 @@
     white-space: nowrap;
   }
 
+  .workspace-insight-card {
+    margin-top: 12px;
+    padding: 14px 16px;
+    border-radius: 18px;
+    border: 1.5px solid rgba(222, 213, 198, 0.88);
+    background: rgba(255, 255, 255, 0.92);
+  }
+
+  .workspace-insight-card h4 {
+    margin: 0 0 12px;
+    color: var(--green-deep);
+    font-size: 15px;
+    letter-spacing: -0.02em;
+  }
+
+  .workspace-insight-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .workspace-insight-item {
+    display: grid;
+    gap: 4px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: rgba(251, 247, 240, 0.92);
+    border: 1px solid rgba(222, 213, 198, 0.72);
+  }
+
+  .workspace-insight-item strong {
+    color: var(--green-deep);
+    font-size: 13px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .workspace-insight-item span {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
   .workspace-metric-note {
     margin: 0;
   }
