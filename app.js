@@ -1608,19 +1608,25 @@
             return getDistMeta(item[0]).color;
           }),
           borderColor: "#fff",
-          borderWidth: 2
+          borderWidth: 2,
+          hoverOffset: 4,
+          radius: "86%"
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        cutout: "58%",
+        cutout: "60%",
         plugins: {
           legend: {
-            position: "right",
+            position: "bottom",
+            align: "start",
             labels: {
               font: { size: 12 },
-              usePointStyle: true
+              usePointStyle: true,
+              padding: 14,
+              boxWidth: 10,
+              boxHeight: 10
             }
           }
         }

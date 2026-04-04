@@ -692,13 +692,14 @@
     display: grid;
     grid-template-columns: minmax(0, 1.42fr) minmax(380px, 0.9fr);
     gap: 16px;
-    align-items: stretch;
+    align-items: start;
   }
 
   .workspace-left,
   .workspace-right {
     display: grid;
     gap: 16px;
+    align-content: start;
   }
 
   .workspace-left-bottom {
@@ -983,14 +984,19 @@
 
   .analytics-panel {
     display: grid;
-    gap: 16px;
+    gap: 14px;
     align-content: start;
+    height: auto;
+  }
+
+  .workspace-right > .workspace-panel {
+    height: auto;
   }
 
   .workspace-chart-card {
     display: grid;
-    gap: 14px;
-    padding: 16px;
+    gap: 12px;
+    padding: 14px;
     border-radius: 18px;
     border: 1.5px solid rgba(200, 190, 169, 0.94);
     background: rgba(255, 255, 255, 0.94);
@@ -1026,7 +1032,7 @@
   }
 
   .workspace-line-wrap {
-    height: 272px;
+    height: 248px;
   }
 
   .workspace-metrics {
@@ -1047,7 +1053,7 @@
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 14px;
     align-items: center;
-    padding: 18px 20px;
+    padding: 15px 18px;
   }
 
   .workspace-metric-row + .workspace-metric-row {
@@ -1092,6 +1098,11 @@
     grid-template-columns: minmax(320px, 0.92fr) minmax(0, 1.08fr);
     gap: 16px;
     margin-bottom: 16px;
+    align-items: start;
+  }
+
+  .detail-grid > .chart-card {
+    height: auto;
   }
 
   .report-insight-grid {
@@ -1944,7 +1955,7 @@
   }
 
   .chart-wrap {
-    height: 260px;
+    height: 236px;
   }
 
   .heatmap-wrap {
