@@ -57,10 +57,6 @@
           <span class="eyebrow badge-deep"><i class="fa-solid fa-sparkles"></i> 프로젝트 개요</span>
           <h1 class="hero-title">AI 기반 인지 왜곡 분석 및 메타인지 개입 시스템 설계</h1>
         </div>
-        <label class="hero-name-card">
-          <span class="hero-name-label">이름</span>
-          <input type="text" placeholder="이름을 입력하세요" aria-label="이름">
-        </label>
       </div>
 
       <div class="hero-summary reveal">
@@ -290,14 +286,14 @@
       </div>
 
       <div class="workspace-board reveal">
-        <div class="workspace-shell">
-          <div class="workspace-left">
-            <article class="panel workspace-panel">
+        <div class="workspace-grid">
+          <section class="workspace-main">
+            <article class="panel workspace-panel workspace-form-panel">
             <div class="workspace-panel-head">
-              <div class="workspace-box-title">사고 상황 및 기록</div>
+              <div class="workspace-box-title">사고 상황 기록</div>
               <div class="tabs compact-tabs">
-                <button class="tab-btn active" data-tab="form"><i class="fa-solid fa-pen-to-square"></i> 기록 입력</button>
-                <button class="tab-btn" data-tab="chat"><i class="fa-solid fa-comments"></i> 대화 입력</button>
+                <button class="tab-btn active" data-tab="form"><i class="fa-solid fa-pen-to-square"></i> 폼 기록</button>
+                <button class="tab-btn" data-tab="chat"><i class="fa-solid fa-comments"></i> 대화 기록</button>
               </div>
             </div>
 
@@ -356,59 +352,17 @@
                 </div>
               </div>
             </div>
-          </article>
+            </article>
+          </section>
 
-            <div class="workspace-left-bottom">
-              <article class="panel workspace-panel result-panel-inline">
-              <div class="workspace-panel-head">
-                <div class="workspace-box-title">AI 분석 결과</div>
-              </div>
-              <div id="latest-analysis-summary" class="latest-analysis-summary"></div>
-              </article>
-
-              <article class="panel workspace-panel sample-utility-panel">
-              <div class="workspace-panel-head">
-                <div class="workspace-box-title">수행예시</div>
-              </div>
-              <div class="sample-list workspace-sample-list">
-                <button class="sample-btn" data-sample="exam">
-                  <div>
-                    <strong>모의고사 불안</strong>
-                    <p class="small-muted">과잉일반화와 파국화가 섞인 예시</p>
-                  </div>
-                </button>
-                <button class="sample-btn" data-sample="presentation">
-                  <div>
-                    <strong>발표 전 긴장</strong>
-                    <p class="small-muted">마음읽기와 불안 예측이 중심인 예시</p>
-                  </div>
-                </button>
-                <button class="sample-btn" data-sample="deadline">
-                  <div>
-                    <strong>과제 마감 죄책감</strong>
-                    <p class="small-muted">해야식 사고와 개인화가 함께 나타나는 예시</p>
-                  </div>
-                </button>
-              </div>
-              <div class="utility-actions">
-                <button id="import-demo-records" class="btn accent"><i class="fa-solid fa-flask"></i> 테스트 데이터 불러오기</button>
-                <button id="export-records" class="btn secondary"><i class="fa-solid fa-file-export"></i> 기록 내보내기</button>
-                <button id="import-records" class="btn ghost"><i class="fa-solid fa-file-import"></i> 기록 불러오기</button>
-              </div>
-              <div id="backup-status" class="analysis-note compact-note">저장된 기록 0건 · 백업 파일에는 API 키가 포함되지 않습니다.</div>
-              <input id="backup-file" type="file" accept=".json,application/json" hidden>
-              </article>
-            </div>
-          </div>
-
-          <div class="workspace-right">
-            <article class="panel workspace-panel analytics-panel">
+          <aside class="workspace-trend">
+            <article class="panel workspace-panel workspace-trend-panel">
             <div class="workspace-panel-head">
-              <div class="workspace-box-title">기록 분석 및 변화</div>
+                <div class="workspace-box-title">메타인지 추세</div>
             </div>
 
             <div class="workspace-chart-card">
-              <div class="workspace-chart-label">메타인지 향상 추세 그래프</div>
+              <div class="workspace-chart-label">메타인지 향상 그래프</div>
               <div id="workspace-chart-empty" class="workspace-chart-empty">
                 아직 기록이 없습니다. 왼쪽에서 학습 상황을 기록하면 변화 그래프와 연구 지표가 여기에 표시됩니다.
               </div>
@@ -416,14 +370,79 @@
                 <canvas id="line-chart"></canvas>
               </div>
             </div>
+            </article>
+          </aside>
 
-            <div class="workspace-stats-head">불안점수 · 인지 왜곡 재구성률</div>
+          <section class="workspace-analysis">
+            <article class="panel workspace-panel result-panel-inline">
+              <div class="workspace-panel-head">
+                <div class="workspace-box-title">AI 분석 결과</div>
+              </div>
+              <div id="latest-analysis-summary" class="latest-analysis-summary"></div>
+            </article>
+          </section>
+
+          <section class="workspace-metric-zone">
+            <article class="panel workspace-panel workspace-metric-panel">
+            <div class="workspace-panel-head">
+              <div class="workspace-box-title">핵심 지표</div>
+            </div>
+            <div class="workspace-stats-head">불안점수 · 재구성률</div>
             <div id="workspace-metrics" class="workspace-metrics"></div>
             <p class="small-muted workspace-metric-note">
               재구성률은 인지 왜곡이 포착되고 대안 사고가 함께 제시된 기록 비율을 기준으로 계산합니다.
             </p>
             </article>
-          </div>
+          </section>
+
+          <section class="workspace-support">
+            <article class="panel workspace-panel sample-utility-panel">
+              <div class="workspace-panel-head">
+                <div class="workspace-box-title">수행예시 · 동기화</div>
+              </div>
+              <div class="workspace-support-shell">
+                <div class="workspace-support-block">
+                  <div class="workspace-support-head">
+                    <strong>예시 시나리오</strong>
+                    <span class="small-muted">빠른 입력</span>
+                  </div>
+                  <div class="sample-list workspace-sample-list">
+                    <button class="sample-btn" data-sample="exam">
+                      <div>
+                        <strong>모의고사 불안</strong>
+                        <p class="small-muted">과잉일반화와 파국화가 섞인 예시</p>
+                      </div>
+                    </button>
+                    <button class="sample-btn" data-sample="presentation">
+                      <div>
+                        <strong>발표 전 긴장</strong>
+                        <p class="small-muted">마음읽기와 불안 예측이 중심인 예시</p>
+                      </div>
+                    </button>
+                    <button class="sample-btn" data-sample="deadline">
+                      <div>
+                        <strong>과제 마감 죄책감</strong>
+                        <p class="small-muted">해야식 사고와 개인화가 함께 나타나는 예시</p>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+                <div class="workspace-support-block workspace-sync-block">
+                  <div class="workspace-support-head">
+                    <strong>백업 · 동기화</strong>
+                    <span class="small-muted">로컬 저장 보조</span>
+                  </div>
+                  <div class="utility-actions">
+                    <button id="import-demo-records" class="btn accent"><i class="fa-solid fa-flask"></i> 테스트 데이터 불러오기</button>
+                    <button id="export-records" class="btn secondary"><i class="fa-solid fa-file-export"></i> 내보내기</button>
+                    <button id="import-records" class="btn ghost"><i class="fa-solid fa-file-import"></i> 불러오기</button>
+                  </div>
+                  <div id="backup-status" class="analysis-note compact-note">저장된 기록 0건 · 백업 파일에는 API 키가 포함되지 않습니다.</div>
+                  <input id="backup-file" type="file" accept=".json,application/json" hidden>
+                </div>
+              </div>
+            </article>
+          </section>
         </div>
       </div>
     </div>

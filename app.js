@@ -1400,6 +1400,9 @@
     var alternative = analysis.alternativeThoughts && analysis.alternativeThoughts[0]
       ? analysis.alternativeThoughts[0]
       : "지금 느끼는 불안이 곧 결과를 확정하는 것은 아닙니다.";
+    var metacognitionHint = analysis.metacognitionInsight || "사건보다 해석 습관이 감정과 행동을 더 크게 움직일 수 있습니다.";
+    var nextAction = analysis.nextAction || "다음 기록에서는 근거와 반대 근거를 한 줄씩 같이 적어보세요.";
+    var cautionNote = analysis.cautionNote || "강한 불안이 길게 지속되면 혼자만 해결하려 하지 말고 도움을 요청하는 것이 좋습니다.";
     var distortionHtml = "";
 
     for (var i = 0; i < distortions.length; i++) {
@@ -1433,6 +1436,20 @@
       "<div class=\"analysis-question-note\">" +
         "<strong>질문 기반 피드백</strong>" +
         "<p>" + escapeHtml(primaryQuestion) + "</p>" +
+      "</div>" +
+      "<div class=\"latest-analysis-footer\">" +
+        "<div class=\"latest-analysis-focus latest-analysis-support\">" +
+          "<h4>메타인지 포인트</h4>" +
+          "<p>" + escapeHtml(metacognitionHint) + "</p>" +
+        "</div>" +
+        "<div class=\"latest-analysis-focus latest-analysis-support\">" +
+          "<h4>다음 행동</h4>" +
+          "<p>" + escapeHtml(nextAction) + "</p>" +
+        "</div>" +
+      "</div>" +
+      "<div class=\"latest-analysis-note\">" +
+        "<strong>기록 메모</strong>" +
+        "<p>" + escapeHtml(cautionNote) + "</p>" +
       "</div>";
   }
 
@@ -1704,21 +1721,21 @@
           borderColor: "#fff",
           borderWidth: 2,
           hoverOffset: 8,
-          radius: "98%"
+          radius: "90%"
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        cutout: "52%",
+        cutout: "56%",
         plugins: {
           legend: {
             position: "bottom",
             align: "center",
             labels: {
-              font: { size: 14 },
+              font: { size: 13 },
               usePointStyle: true,
-              padding: 20,
+              padding: 18,
               boxWidth: 12,
               boxHeight: 12
             }
