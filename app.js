@@ -1060,25 +1060,10 @@
     }
   }
 
-  // 4단계 폼은 CBT 기록 순서를 그대로 UI 단계로 나눈 구조다.
+  // 현재 폼은 한 화면에서 상황-생각-감정-행동을 모두 입력하는 보드형 구조다.
   function updateFormUi() {
-    for (var i = 0; i < 4; i++) {
-      $("step-" + i).classList.toggle("active", i === formStep);
-    }
-
-    var labels = ["상황 입력", "생각 입력", "감정 입력", "행동 입력"];
-    $("step-label").textContent = (formStep + 1) + " / 4 · " + labels[formStep];
-    $("progress-bar").style.width = ((formStep + 1) * 25) + "%";
-
-    var dots = $("step-dots").children;
-    for (var j = 0; j < dots.length; j++) {
-      dots[j].classList.toggle("active", j <= formStep);
-    }
-
-    $("prev-step").style.display = formStep === 0 ? "none" : "inline-flex";
-    $("next-step").innerHTML = formStep === 3
-      ? "<i class=\"fa-solid fa-wand-magic-sparkles\"></i> 분석하고 저장"
-      : "다음 <i class=\"fa-solid fa-arrow-right\"></i>";
+    if ($("prev-step")) $("prev-step").style.display = "none";
+    $("next-step").innerHTML = "<i class=\"fa-solid fa-wand-magic-sparkles\"></i> 기록하고 분석";
   }
 
   function getFormRecord() {
@@ -1095,11 +1080,10 @@
   }
 
   function validateCurrentStep() {
-    if (formStep === 0) return $("field-situation").value.trim().length >= 8;
-    if (formStep === 1) return $("field-thought").value.trim().length >= 6;
-    if (formStep === 2) return !!selectedEmotion;
-    if (formStep === 3) return $("field-behavior").value.trim().length >= 4;
-    return false;
+    return $("field-situation").value.trim().length >= 8 &&
+      $("field-thought").value.trim().length >= 6 &&
+      !!selectedEmotion &&
+      $("field-behavior").value.trim().length >= 4;
   }
 
   function setRecordStatus(text) {
@@ -1121,11 +1105,11 @@
 
   function setFormBusy(isBusy, label) {
     isFormBusy = isBusy;
-    $("prev-step").disabled = isBusy;
+    if ($("prev-step")) $("prev-step").disabled = isBusy;
     $("next-step").disabled = isBusy;
     $("next-step").innerHTML = isBusy
       ? "<i class=\"fa-solid fa-spinner fa-spin\"></i> " + escapeHtml(label || "분석 중")
-      : (formStep === 3 ? "<i class=\"fa-solid fa-wand-magic-sparkles\"></i> 분석하고 저장" : "다음 <i class=\"fa-solid fa-arrow-right\"></i>");
+      : "<i class=\"fa-solid fa-wand-magic-sparkles\"></i> 기록하고 분석";
   }
 
   function invalidateWeeklyCache() {
@@ -1136,19 +1120,15 @@
   // 폼 입력의 핵심 저장 흐름: 검증 → 분석 → 저장 → 대시보드/리포트 갱신.
   async function submitFormRecord() {
     if (!validateCurrentStep()) {
-      var errors = [
-        "상황을 조금 더 구체적으로 적어주세요.",
-        "자동 사고 문장을 6자 이상 적어주세요.",
-        "감정을 선택해주세요.",
-        "행동을 4자 이상 적어주세요."
-      ];
-      toast(errors[formStep], "warn");
-      return;
-    }
-
-    if (formStep < 3) {
-      formStep += 1;
-      updateFormUi();
+      if ($("field-situation").value.trim().length < 8) {
+        toast("상황을 조금 더 구체적으로 적어주세요.", "warn");
+      } else if ($("field-thought").value.trim().length < 6) {
+        toast("자동 사고 문장을 6자 이상 적어주세요.", "warn");
+      } else if (!selectedEmotion) {
+        toast("감정을 선택해주세요.", "warn");
+      } else {
+        toast("행동을 4자 이상 적어주세요.", "warn");
+      }
       return;
     }
 
@@ -1180,7 +1160,7 @@
       buttons[i].classList.toggle("active", buttons[i].getAttribute("data-tab") === tab);
     }
 
-    $("form-panel").style.display = tab === "form" ? "block" : "none";
+    $("form-panel").style.display = tab === "form" ? "flex" : "none";
     $("chat-panel").classList.toggle("active", tab === "chat");
     if (tab === "chat" && !$("chat-log").children.length) initChat();
   }
@@ -1404,10 +1384,143 @@
     document.body.style.overflow = "";
   }
 
+  function renderLatestAnalysisSummary() {
+    var el = $("latest-analysis-summary");
+    if (!el) return;
+
+    if (!records.length) {
+      el.innerHTML = "<div class=\"latest-analysis-empty\">아직 분석된 기록이 없습니다.<br>왼쪽에서 기록을 저장하면 최신 AI 분석 결과가 여기에 요약됩니다.</div>";
+      return;
+    }
+
+    var record = records[0];
+    var analysis = record.analysis || getRuleBasedAnalysis(record, "");
+    var distortions = analysis.distortions || [];
+    var primaryQuestion = analysis.reflectionQuestions && analysis.reflectionQuestions[0] ? analysis.reflectionQuestions[0] : "이 생각을 다른 근거로 다시 볼 수 있을까요?";
+    var alternative = analysis.alternativeThoughts && analysis.alternativeThoughts[0]
+      ? analysis.alternativeThoughts[0]
+      : "지금 느끼는 불안이 곧 결과를 확정하는 것은 아닙니다.";
+    var distortionHtml = "";
+
+    for (var i = 0; i < distortions.length; i++) {
+      var item = distortions[i];
+      distortionHtml += "<span class=\"dist-pill\" style=\"background:" + item.color + "18; color:" + item.color + ";\">" + renderDistortionIcon(item.icon, "badge-icon-svg") + escapeHtml(item.name) + "</span>";
+    }
+
+    el.innerHTML =
+      "<div class=\"latest-analysis-topline\">" +
+        "<span class=\"badge gray\"><i class=\"fa-solid fa-clock\"></i> " + escapeHtml(formatDateTime(record.date)) + "</span>" +
+        resultSourceBadge(analysis) +
+      "</div>" +
+      "<div class=\"latest-analysis-row\">" +
+        "<div class=\"latest-analysis-focus\">" +
+          "<h4>자동 사고</h4>" +
+          "<p>\"" + escapeHtml(record.thought) + "\"</p>" +
+        "</div>" +
+        "<div class=\"latest-analysis-focus\">" +
+          "<h4>분석 요약</h4>" +
+          "<p>" + escapeHtml(analysis.summary) + "</p>" +
+        "</div>" +
+      "</div>" +
+      "<div class=\"latest-analysis-strip\">" + distortionHtml + "</div>" +
+      "<div class=\"analysis-reframe-board\">" +
+        "<div class=\"analysis-reframe-label\">대안 제시</div>" +
+        "<div class=\"analysis-reframe-content\">" +
+          "<strong>보다 현실적인 해석</strong>" +
+          "<p>" + escapeHtml(alternative) + "</p>" +
+        "</div>" +
+      "</div>" +
+      "<div class=\"analysis-question-note\">" +
+        "<strong>질문 기반 피드백</strong>" +
+        "<p>" + escapeHtml(primaryQuestion) + "</p>" +
+      "</div>";
+  }
+
+  function buildWorkspaceMetrics() {
+    var total = records.length;
+    var intensitySum = 0;
+    var recognized = 0;
+    var reframed = 0;
+    var activeDays = {};
+
+    for (var i = 0; i < records.length; i++) {
+      var record = records[i];
+      intensitySum += record.intensity;
+      var primary = record.analysis && record.analysis.distortions && record.analysis.distortions[0] ? record.analysis.distortions[0].name : NONE_DISTORTION;
+      var hasAlternative = !!(record.analysis && Array.isArray(record.analysis.alternativeThoughts) && record.analysis.alternativeThoughts.length);
+      if (primary !== NONE_DISTORTION) recognized += 1;
+      if (primary !== NONE_DISTORTION && hasAlternative) reframed += 1;
+      activeDays[String(record.date).slice(0, 10)] = true;
+    }
+
+    return {
+      total: total,
+      avgIntensity: total ? intensitySum / total : 0,
+      recognitionRate: total ? Math.round((recognized / total) * 100) : 0,
+      reframeRate: total ? Math.round((reframed / total) * 100) : 0,
+      continuityRate: Math.round(Math.min(1, Object.keys(activeDays).length / 7) * 100)
+    };
+  }
+
+  function renderWorkspaceMetrics() {
+    var el = $("workspace-metrics");
+    if (!el) return;
+
+    if (!records.length) {
+      el.innerHTML =
+        "<div class=\"workspace-metric-sheet\">" +
+          "<div class=\"workspace-metric-row\"><div class=\"workspace-metric-label\"><strong>기록수</strong><span>저장된 기록이 없습니다.</span></div><div class=\"workspace-metric-value\">0회</div></div>" +
+          "<div class=\"workspace-metric-row\"><div class=\"workspace-metric-label\"><strong>평균 불안점수</strong><span>기록 후 자동 계산됩니다.</span></div><div class=\"workspace-metric-value\">-</div></div>" +
+          "<div class=\"workspace-metric-row\"><div class=\"workspace-metric-label\"><strong>인지 왜곡 재구성률</strong><span>대안 사고 제시 비율을 표시합니다.</span></div><div class=\"workspace-metric-value\">-</div></div>" +
+          "<div class=\"workspace-metric-row\"><div class=\"workspace-metric-label\"><strong>기록 지속률</strong><span>최근 7일 기록 빈도로 계산합니다.</span></div><div class=\"workspace-metric-value\">-</div></div>" +
+        "</div>";
+      return;
+    }
+
+    var metrics = buildWorkspaceMetrics();
+    el.innerHTML =
+      "<div class=\"workspace-metric-sheet\">" +
+        "<div class=\"workspace-metric-row\"><div class=\"workspace-metric-label\"><strong>기록수</strong><span>누적 저장 기록 기준입니다.</span></div><div class=\"workspace-metric-value\">" + metrics.total + "회</div></div>" +
+        "<div class=\"workspace-metric-row\"><div class=\"workspace-metric-label\"><strong>평균 불안점수</strong><span>최근 전체 기록의 평균 강도입니다.</span></div><div class=\"workspace-metric-value\">" + metrics.avgIntensity.toFixed(1) + "</div></div>" +
+        "<div class=\"workspace-metric-row\"><div class=\"workspace-metric-label\"><strong>인지 왜곡 재구성률</strong><span>왜곡 포착 후 대안 사고가 함께 생성된 비율입니다.</span></div><div class=\"workspace-metric-value\">" + metrics.reframeRate + "%</div></div>" +
+        "<div class=\"workspace-metric-row\"><div class=\"workspace-metric-label\"><strong>기록 지속률</strong><span>최근 7일 기준 기록이 남은 날짜 비율입니다.</span></div><div class=\"workspace-metric-value\">" + metrics.continuityRate + "%</div></div>" +
+      "</div>";
+  }
+
+  function renderWorkspaceBoard() {
+    var empty = $("workspace-chart-empty");
+    var wrap = $("workspace-chart-wrap");
+    renderLatestAnalysisSummary();
+    renderWorkspaceMetrics();
+
+    if (!empty || !wrap) return;
+
+    if (!records.length) {
+      if (lineChart) {
+        lineChart.destroy();
+        lineChart = null;
+      }
+      empty.style.display = "grid";
+      wrap.style.display = "none";
+      return;
+    }
+
+    empty.style.display = "none";
+    wrap.style.display = "block";
+    drawLineChart();
+  }
+
   // records 배열 하나를 기준으로 모든 시각화와 기록 목록을 다시 그린다.
   function refreshDashboard() {
     updateBackupStatus();
+    renderWorkspaceBoard();
     if (!records.length) {
+      if (donutChart) {
+        donutChart.destroy();
+        donutChart = null;
+      }
+      if ($("heatmap")) $("heatmap").innerHTML = "";
+      if ($("record-list")) $("record-list").innerHTML = "";
       $("dashboard-empty").style.display = "block";
       $("dashboard-shell").style.display = "none";
       return;
@@ -1415,7 +1528,6 @@
 
     $("dashboard-empty").style.display = "none";
     $("dashboard-shell").style.display = "grid";
-    drawLineChart();
     drawDonutChart();
     drawHeatmap();
     drawRecordList();
